@@ -1,0 +1,2104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Connect — The infrastructure that gives intelligence to physical products</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #050505;
+  --bg-card: #0c0c0c;
+  --bg-card-hover: #141414;
+  --border: #1a1a1a;
+  --border-light: #252525;
+  --text: #f0f0f0;
+  --text-secondary: #8a8a8a;
+  --text-dim: #555555;
+  --accent: #a8e06c;
+  --accent-dim: rgba(168, 224, 108, 0.10);
+  --accent-glow: rgba(168, 224, 108, 0.25);
+  --white: #ffffff;
+  --radius: 20px;
+  --radius-sm: 12px;
+  --radius-xs: 8px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ===== FADE-IN ANIMATIONS ===== */
+.fade-up {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-up-delay-1 { transition-delay: 0.1s; }
+.fade-up-delay-2 { transition-delay: 0.2s; }
+.fade-up-delay-3 { transition-delay: 0.3s; }
+.fade-up-delay-4 { transition-delay: 0.4s; }
+
+/* ===== NAV ===== */
+nav {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  padding: 12px 20px;
+  background: rgba(10, 10, 10, 0.65);
+  backdrop-filter: blur(24px) saturate(1.8);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 100px;
+  max-width: 860px;
+  width: calc(100% - 32px);
+}
+
+nav .nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.nav-logo svg { width: 22px; height: 22px; }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 13px;
+  color: var(--text-secondary);
+  transition: color 0.2s;
+  font-weight: 500;
+}
+
+.nav-links a:hover { color: var(--white); }
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: var(--white);
+  color: var(--bg);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(168, 224, 108, 0.2);
+}
+
+.btn-primary:hover::after { opacity: 1; }
+.btn-primary span { position: relative; z-index: 2; }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--border-light);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-secondary:hover {
+  border-color: var(--text-dim);
+  background: rgba(255,255,255,0.06);
+  transform: translateY(-1px);
+}
+
+/* ===== HERO ===== */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 160px 24px 100px;
+  overflow: hidden;
+}
+
+/* Canvas sits behind everything */
+#hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* Layered gradient atmosphere */
+.hero-atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-atmosphere .orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+}
+
+.hero-atmosphere .orb-1 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(168, 224, 108, 0.12), transparent 70%);
+  top: -10%;
+  left: 20%;
+  animation: orbFloat1 18s ease-in-out infinite;
+}
+
+.hero-atmosphere .orb-2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(60, 120, 255, 0.10), transparent 70%);
+  top: 10%;
+  right: 10%;
+  animation: orbFloat2 22s ease-in-out infinite;
+}
+
+.hero-atmosphere .orb-3 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(140, 80, 255, 0.08), transparent 70%);
+  bottom: 0%;
+  left: 40%;
+  animation: orbFloat3 20s ease-in-out infinite;
+}
+
+@keyframes orbFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(60px, 40px) scale(1.1); }
+  66% { transform: translate(-40px, 20px) scale(0.95); }
+}
+
+@keyframes orbFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-50px, 30px) scale(0.9); }
+  66% { transform: translate(30px, -40px) scale(1.08); }
+}
+
+@keyframes orbFloat3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, -30px) scale(1.15); }
+}
+
+/* Animated iridescent ribbon */
+.hero-ribbon-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-ribbon {
+  position: absolute;
+  width: 160%;
+  height: 320px;
+  top: 20%;
+  left: -30%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(168, 224, 108, 0.06) 8%,
+    rgba(60, 200, 255, 0.08) 18%,
+    rgba(180, 100, 255, 0.07) 28%,
+    rgba(255, 180, 50, 0.05) 38%,
+    rgba(60, 255, 180, 0.07) 48%,
+    rgba(168, 224, 108, 0.06) 58%,
+    rgba(100, 120, 255, 0.08) 68%,
+    rgba(255, 100, 200, 0.06) 78%,
+    rgba(168, 224, 108, 0.05) 88%,
+    transparent 100%
+  );
+  transform: rotate(-6deg) scaleY(1);
+  filter: blur(30px);
+  animation: ribbonFlow 16s ease-in-out infinite;
+}
+
+.hero-ribbon-2 {
+  position: absolute;
+  width: 140%;
+  height: 240px;
+  top: 35%;
+  left: -20%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(100, 200, 255, 0.05) 15%,
+    rgba(168, 224, 108, 0.04) 35%,
+    rgba(255, 100, 150, 0.05) 55%,
+    rgba(60, 180, 255, 0.06) 75%,
+    transparent 100%
+  );
+  transform: rotate(-3deg);
+  filter: blur(40px);
+  animation: ribbonFlow2 20s ease-in-out infinite;
+}
+
+@keyframes ribbonFlow {
+  0%, 100% { transform: rotate(-6deg) translateX(-3%) scaleY(1); }
+  50% { transform: rotate(-4deg) translateX(3%) scaleY(1.2); }
+}
+
+@keyframes ribbonFlow2 {
+  0%, 100% { transform: rotate(-3deg) translateX(2%); }
+  50% { transform: rotate(-5deg) translateX(-4%); }
+}
+
+/* Grain overlay */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  max-width: 860px;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 18px 7px 14px;
+  background: rgba(168, 224, 108, 0.06);
+  border: 1px solid rgba(168, 224, 108, 0.15);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+  margin-bottom: 36px;
+  backdrop-filter: blur(8px);
+  animation: badgeFadeIn 1s 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-badge .pulse-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: relative;
+}
+
+.hero-badge .pulse-dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  animation: pingPulse 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes pingPulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  75%, 100% { transform: scale(2.5); opacity: 0; }
+}
+
+@keyframes badgeFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+  font-size: clamp(44px, 6.5vw, 78px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  margin-bottom: 28px;
+  animation: headlineFadeIn 1s 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+h1 em {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  background: linear-gradient(135deg, var(--accent) 0%, #88ff44 40%, #44ffaa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+  animation: headlineFadeIn 1s 0.35s cubic-bezier(0.16, 1, 0.3, 1) both, gradientShift 8s ease-in-out infinite;
+}
+
+@keyframes headlineFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.hero-sub {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-width: 560px;
+  margin: 0 auto 44px;
+  animation: subFadeIn 1s 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes subFadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-ctas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 52px;
+  animation: ctaFadeIn 1s 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes ctaFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-proof {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  font-size: 13px;
+  color: var(--text-dim);
+  animation: proofFadeIn 1s 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes proofFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.hero-proof span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero-proof .check {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(168, 224, 108, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: var(--accent);
+}
+
+/* Hero bottom gradient fade */
+.hero-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(to bottom, transparent, var(--bg));
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ===== LOGOS ===== */
+.logos {
+  padding: 56px 0;
+  position: relative;
+}
+
+.logos p {
+  text-align: center;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  margin-bottom: 28px;
+  font-weight: 500;
+}
+
+.logo-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 64px;
+  flex-wrap: wrap;
+}
+
+.logo-item {
+  font-size: 22px;
+  font-weight: 700;
+  color: #333;
+  letter-spacing: -0.02em;
+  transition: color 0.4s;
+}
+
+.logo-item:hover { color: #666; }
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ===== URGENCY BANNER ===== */
+.urgency {
+  padding: 80px 0;
+}
+
+.urgency-card {
+  background: linear-gradient(135deg, rgba(168, 224, 108, 0.04) 0%, rgba(168, 224, 108, 0.01) 100%);
+  border: 1px solid rgba(168, 224, 108, 0.12);
+  border-radius: var(--radius);
+  padding: 48px 56px;
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.urgency-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(168, 224, 108, 0.06), transparent 70%);
+  pointer-events: none;
+}
+
+.urgency-left { flex: 1; }
+
+.urgency-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.urgency-left h2 {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+
+.urgency-left p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.urgency-right { flex-shrink: 0; }
+
+.countdown-number {
+  font-size: 64px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  text-shadow: 0 0 60px rgba(168, 224, 108, 0.25);
+}
+
+.countdown-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  margin-top: 6px;
+  text-align: center;
+}
+
+/* ===== MANIFESTO (SCROLL-REVEAL) ===== */
+.manifesto {
+  padding: 0;
+  position: relative;
+}
+
+.manifesto-sticky {
+  min-height: 160vh;
+  position: relative;
+}
+
+.manifesto-content {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+}
+
+.manifesto-text {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.manifesto-text .reveal-line {
+  font-size: clamp(28px, 4.5vw, 48px);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.4em;
+}
+
+.manifesto-text .reveal-line:last-child {
+  margin-bottom: 0;
+}
+
+.manifesto-text .reveal-word {
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.12);
+  transition: color 0.05s ease;
+  margin-right: 0.25em;
+}
+
+.manifesto-text .reveal-word.lit {
+  color: #ffffff;
+}
+
+.manifesto-text .reveal-word.accent-word.lit {
+  color: var(--accent);
+}
+
+.manifesto-text .reveal-word.dim-word.lit {
+  color: var(--text-secondary);
+}
+
+.manifesto-text .spacer-line {
+  height: 1.2em;
+}
+
+/* ===== FEATURES GRID ===== */
+.features {
+  padding: 60px 0 120px;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.section-header h2 {
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin-bottom: 12px;
+}
+
+.section-header p {
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.feature-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px 32px;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(168, 224, 108, 0.3), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.feature-card:hover {
+  border-color: rgba(168, 224, 108, 0.15);
+  background: var(--bg-card-hover);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+}
+
+.feature-card:hover::before { opacity: 1; }
+
+.feature-card-glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(168, 224, 108, 0.06), transparent);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.feature-card:hover .feature-card-glow { opacity: 1; }
+
+.feature-icon {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(168, 224, 108, 0.06);
+  border: 1px solid rgba(168, 224, 108, 0.1);
+  border-radius: 14px;
+  margin-bottom: 24px;
+  font-size: 22px;
+}
+
+.feature-icon svg { width: 100%; height: 100%; }
+
+.feature-card h3 {
+  font-size: 18px;
+  font-weight: 650;
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+
+.feature-card p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+/* ===== HOW IT WORKS ===== */
+.how-it-works {
+  padding: 120px 0;
+  position: relative;
+}
+
+.how-it-works::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(168, 224, 108, 0.03), transparent);
+  pointer-events: none;
+}
+
+.how-it-works .section-header { margin-bottom: 72px; }
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  position: relative;
+}
+
+.step {
+  text-align: center;
+  position: relative;
+  padding: 0 32px;
+}
+
+.step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 36px;
+  right: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(168, 224, 108, 0.15) 50%, transparent 100%);
+}
+
+.step-number {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  border: 2px solid var(--border-light);
+  border-radius: 50%;
+  margin: 0 auto 28px;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--accent);
+  position: relative;
+  z-index: 2;
+  transition: all 0.4s;
+}
+
+.step:hover .step-number {
+  border-color: var(--accent);
+  box-shadow: 0 0 32px rgba(168, 224, 108, 0.15);
+}
+
+.step h3 {
+  font-size: 18px;
+  font-weight: 650;
+  margin-bottom: 10px;
+}
+
+.step p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+/* ===== PRODUCT SECTIONS ===== */
+.product-section {
+  padding: 120px 0;
+}
+
+.product-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.product-row.reversed { direction: rtl; }
+.product-row.reversed > * { direction: ltr; }
+
+.product-text .tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.product-text h2 {
+  font-size: clamp(26px, 3vw, 36px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+
+.product-text p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.product-text ul {
+  list-style: none;
+  margin-bottom: 32px;
+}
+
+.product-text li {
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding: 8px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.product-text li .li-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(168, 224, 108, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-size: 10px;
+  color: var(--accent);
+}
+
+.product-visual {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s;
+}
+
+.product-visual:hover {
+  border-color: var(--border-light);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+}
+
+.product-visual::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(168, 224, 108, 0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.mock-ui {
+  width: 100%;
+  font-size: 13px;
+  position: relative;
+  z-index: 2;
+}
+
+.mock-toolbar {
+  display: flex;
+  gap: 7px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.mock-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+
+.mock-dot:nth-child(1) { background: #ff5f57; }
+.mock-dot:nth-child(2) { background: #ffbd2e; }
+.mock-dot:nth-child(3) { background: #28c840; }
+
+.mock-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  margin-bottom: 8px;
+  transition: all 0.3s;
+}
+
+.mock-row:hover {
+  background: rgba(255,255,255,0.04);
+  border-color: var(--border-light);
+}
+
+.mock-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.mock-status.green { background: #22c55e; box-shadow: 0 0 8px rgba(34,197,94,0.4); }
+.mock-status.yellow { background: #eab308; box-shadow: 0 0 8px rgba(234,179,8,0.4); }
+.mock-status.blue { background: #3b82f6; box-shadow: 0 0 8px rgba(59,130,246,0.4); }
+
+.mock-label { flex: 1; color: var(--text-secondary); }
+
+.mock-value {
+  color: var(--text-dim);
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 11px;
+}
+
+/* ===== METRICS ===== */
+.metrics {
+  padding: 100px 0;
+  position: relative;
+}
+
+.metrics::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  top: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-light) 20%, var(--border-light) 80%, transparent);
+}
+
+.metrics::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-light) 20%, var(--border-light) 80%, transparent);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  text-align: center;
+}
+
+.metric-item h3 {
+  font-size: 56px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 8px;
+  background: linear-gradient(180deg, var(--white) 0%, var(--text-dim) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.metric-item p {
+  font-size: 13px;
+  color: var(--text-dim);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ===== TESTIMONIAL ===== */
+.testimonial {
+  padding: 120px 0;
+}
+
+.testimonial-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.testimonial-content {
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.testimonial-content blockquote {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  margin-bottom: 36px;
+}
+
+.testimonial-content blockquote::before { content: '\201C'; }
+.testimonial-content blockquote::after { content: '\201D'; }
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 36px;
+}
+
+.testimonial-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--border-light), var(--border));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text-dim);
+}
+
+.testimonial-name {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.testimonial-role {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.testimonial-stats {
+  display: flex;
+  gap: 48px;
+}
+
+.stat-item h4 {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.stat-item p {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.testimonial-visual {
+  background: linear-gradient(135deg, #060d1a 0%, #0a1a3a 40%, #0d1f4a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  min-height: 440px;
+  position: relative;
+  overflow: hidden;
+}
+
+.testimonial-visual::before {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(60, 120, 255, 0.2), transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: orbFloat2 12s ease-in-out infinite;
+}
+
+.testimonial-visual::after {
+  content: '';
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(100, 60, 255, 0.15), transparent 70%);
+  top: 60%;
+  left: 30%;
+  transform: translate(-50%, -50%);
+  animation: orbFloat3 15s ease-in-out infinite;
+}
+
+.testimonial-logo {
+  font-size: 64px;
+  font-weight: 900;
+  color: white;
+  letter-spacing: -0.03em;
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 4px 40px rgba(255,255,255,0.1);
+}
+
+/* ===== INFRA GRID ===== */
+.infra {
+  padding: 120px 0;
+}
+
+.infra-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 60px;
+}
+
+.infra-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 36px;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.infra-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(168, 224, 108, 0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.infra-card:hover {
+  border-color: rgba(168, 224, 108, 0.12);
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+}
+
+.infra-card:hover::before { opacity: 1; }
+
+.infra-card .ic-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(168, 224, 108, 0.06);
+  border: 1px solid rgba(168, 224, 108, 0.08);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.infra-card h3 {
+  font-size: 17px;
+  font-weight: 650;
+  margin-bottom: 8px;
+}
+
+.infra-card p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+/* ===== FINAL CTA ===== */
+.final-cta {
+  padding: 140px 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.final-cta-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.final-cta-bg .orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+}
+
+.final-cta-bg .orb-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(168, 224, 108, 0.08), transparent 70%);
+  bottom: -20%;
+  left: 30%;
+  animation: orbFloat1 15s ease-in-out infinite;
+}
+
+.final-cta-bg .orb-2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(60, 120, 255, 0.06), transparent 70%);
+  bottom: -10%;
+  right: 20%;
+  animation: orbFloat2 18s ease-in-out infinite;
+}
+
+.final-cta-content {
+  position: relative;
+  z-index: 2;
+}
+
+.final-cta h2 {
+  font-size: clamp(36px, 5.5vw, 64px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  margin-bottom: 20px;
+}
+
+.final-cta h2 em {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  background: linear-gradient(135deg, var(--accent) 0%, #88ff44 40%, #44ffaa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.final-cta p {
+  font-size: 17px;
+  color: var(--text-secondary);
+  margin-bottom: 40px;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.final-cta .hero-ctas { margin-bottom: 0; }
+
+/* ===== FOOTER ===== */
+footer {
+  padding: 64px 0 40px;
+  position: relative;
+}
+
+footer::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  top: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-light) 20%, var(--border-light) 80%, transparent);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+.footer-brand p {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-top: 14px;
+  max-width: 260px;
+  line-height: 1.6;
+}
+
+.footer-col h4 {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  margin-bottom: 18px;
+}
+
+.footer-col a {
+  display: block;
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding: 5px 0;
+  transition: color 0.2s;
+}
+
+.footer-col a:hover { color: var(--white); }
+
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 32px;
+  position: relative;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.footer-bottom::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  top: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  nav { border-radius: 16px; }
+  .nav-links { display: none; }
+
+  .features-grid,
+  .steps { grid-template-columns: 1fr; }
+
+  .step:not(:last-child)::after { display: none; }
+
+  .product-row,
+  .product-row.reversed { grid-template-columns: 1fr; gap: 40px; direction: ltr; }
+
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+
+  .testimonial-card { grid-template-columns: 1fr; }
+
+  .infra-grid { grid-template-columns: 1fr; }
+
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+
+  .urgency-card { flex-direction: column; padding: 32px; gap: 32px; }
+
+  .hero-ctas { flex-direction: column; }
+
+  .hero-proof { flex-direction: column; gap: 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+      </svg>
+      Product Connect
+    </a>
+    <ul class="nav-links">
+      <li><a href="#platform">Platform</a></li>
+      <li><a href="product-connect-pricing.html">Pricing</a></li>
+      <li><a href="#">Docs</a></li>
+      <li><a href="#">Changelog</a></li>
+    </ul>
+    <a href="product-connect-pricing.html" class="btn-primary"><span>Get started free</span></a>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <!-- Animated canvas background -->
+  <canvas id="hero-canvas"></canvas>
+
+  <!-- Floating gradient orbs -->
+  <div class="hero-atmosphere">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Iridescent ribbons -->
+  <div class="hero-ribbon-wrap">
+    <div class="hero-ribbon"></div>
+    <div class="hero-ribbon-2"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="pulse-dot"></span>
+      Product Connect API 2.0 — Now available
+    </div>
+    <h1>The infrastructure that gives <em>intelligence</em> to physical products</h1>
+    <p class="hero-sub">One platform for Digital Product Passports, supply chain transparency, compliance, and after-sales — powered by product intelligence.</p>
+    <div class="hero-ctas">
+      <a href="#" class="btn-primary"><span>Start building for free →</span></a>
+      <a href="#" class="btn-secondary">Book a demo</a>
+    </div>
+    <div class="hero-proof">
+      <span><span class="check">✓</span> Free tier available</span>
+      <span><span class="check">✓</span> EU DPP compliant</span>
+      <span><span class="check">✓</span> SOC 2 certified</span>
+    </div>
+  </div>
+
+  <div class="hero-fade"></div>
+</section>
+
+<!-- ===== LOGOS ===== -->
+<section class="logos fade-up">
+  <div class="container">
+    <p>Trusted by leading furniture manufacturers</p>
+    <div style="overflow:hidden;">
+      <div class="logo-row" style="display:flex;gap:64px;animation:marquee 20s linear infinite;width:200%;">
+        <span class="logo-item">HAY</span>
+        <span class="logo-item">Fritz Hansen</span>
+        <span class="logo-item">Montana</span>
+        <span class="logo-item">Muuto</span>
+        <span class="logo-item">&amp;Tradition</span>
+        <span class="logo-item">HAY</span>
+        <span class="logo-item">Fritz Hansen</span>
+        <span class="logo-item">Montana</span>
+        <span class="logo-item">Muuto</span>
+        <span class="logo-item">&amp;Tradition</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== EU DPP URGENCY ===== -->
+<section class="urgency fade-up">
+  <div class="container">
+    <div class="urgency-card">
+      <div class="urgency-left">
+        <div class="urgency-tag">⚡ EU Regulation</div>
+        <h2>The EU Digital Product Passport for furniture goes live in 2028.</h2>
+        <p>Every product sold in the EU will need a machine-readable digital passport with full material traceability, chemical data, and lifecycle information. The clock is ticking — and the infrastructure takes time to build.</p>
+      </div>
+      <div class="urgency-right">
+        <div class="countdown-item">
+          <div class="countdown-number">~2</div>
+          <div class="countdown-label">Years left</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MANIFESTO (SCROLL-REVEAL) ===== -->
+<section class="manifesto" id="manifesto">
+  <div class="manifesto-sticky">
+    <div class="manifesto-content">
+      <div class="manifesto-text" id="manifestoText">
+        <div class="reveal-line" data-accent="true">You can't improve what you can't see.</div>
+        <div class="spacer-line"></div>
+        <div class="reveal-line">Product Connect maps the true impact of everything you make — from raw material to component to finished product, and through our Digital Product Passport, all the way to the hands that use it.</div>
+        <div class="spacer-line"></div>
+        <div class="reveal-line" data-dim="true">When you see the whole chain, you can redesign it. When your customers see it too, they trust you.</div>
+        <div class="spacer-line"></div>
+        <div class="reveal-line" data-dim="true">We're building infrastructure for products that last — and manufacturers who lead.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CORE PLATFORM ===== -->
+<section class="features" id="platform">
+  <div class="container">
+    <div class="section-header fade-up">
+      <h2>The core of Product Connect</h2>
+      <p>Three engines. One source of truth for your products.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card fade-up fade-up-delay-1">
+        <div class="feature-card-glow"></div>
+        <div class="feature-icon">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="10" fill="#a8e06c"/>
+            <circle cx="50" cy="20" r="6" fill="#a8e06c" opacity="0.6"/>
+            <circle cx="70" cy="40" r="6" fill="#a8e06c" opacity="0.6"/>
+            <circle cx="30" cy="40" r="6" fill="#a8e06c" opacity="0.6"/>
+            <line x1="50" y1="50" x2="50" y2="20" stroke="#a8e06c" stroke-width="1.5" opacity="0.4"/>
+            <line x1="50" y1="50" x2="70" y2="40" stroke="#a8e06c" stroke-width="1.5" opacity="0.4"/>
+            <line x1="50" y1="50" x2="30" y2="40" stroke="#a8e06c" stroke-width="1.5" opacity="0.4"/>
+            <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 50 50" to="360 50 50" dur="12s" repeatCount="indefinite"/>
+          </svg>
+        </div>
+        <h3>Semantic Product Graph</h3>
+        <p>A living knowledge base that connects parts, suppliers, materials, and impact data — making every product queryable and every claim verifiable.</p>
+      </div>
+      <div class="feature-card fade-up fade-up-delay-2">
+        <div class="feature-card-glow"></div>
+        <div class="feature-icon">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 50 20 L 60 35 L 75 35 L 63 45 L 68 60 L 50 50 L 32 60 L 37 45 L 25 35 L 40 35 Z" fill="#a8e06c" opacity="0.4"/>
+            <path d="M 50 25 L 57 37 L 70 37 L 60 45 L 65 57 L 50 49 L 35 57 L 40 45 L 30 37 L 43 37 Z" fill="#a8e06c" opacity="0.7"/>
+            <path d="M 50 30 L 55 39 L 66 39 L 57 45 L 62 54 L 50 48 L 38 54 L 43 45 L 34 39 L 45 39 Z" fill="#a8e06c"/>
+            <animate attributeName="opacity" values="0.4;0.7;0.4" dur="3s" repeatCount="indefinite"/>
+          </svg>
+        </div>
+        <h3>Product Intelligence Engine</h3>
+        <p>Automated regulatory reporting that tracks materials, verifies sourcing, and generates documentation for EU Digital Product Passports and beyond.</p>
+      </div>
+      <div class="feature-card fade-up fade-up-delay-3">
+        <div class="feature-card-glow"></div>
+        <div class="feature-icon">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="30" cy="50" r="8" fill="#a8e06c"/>
+            <circle cx="70" cy="50" r="8" fill="#a8e06c"/>
+            <line x1="38" y1="50" x2="62" y2="50" stroke="#a8e06c" stroke-width="2"/>
+            <circle cx="50" cy="50" r="3" fill="#a8e06c" opacity="0.6">
+              <animate attributeName="r" values="3;8;3" dur="2s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+        </div>
+        <h3>Connected Products</h3>
+        <p>Turn static objects into intelligent assets with QR-enabled passports that connect owners to makers for parts, repairs, upgrades, and take-back.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section class="how-it-works" id="how">
+  <div class="container">
+    <div class="section-header fade-up">
+      <h2>From BOM to passport in minutes</h2>
+      <p>Three steps to make your products intelligent</p>
+    </div>
+    <div class="steps">
+      <div class="step fade-up fade-up-delay-1">
+        <div class="step-number">1</div>
+        <h3>Connect your data</h3>
+        <p>Upload BOMs, sync your ERP, or import CAD files. Our parsers automatically map your product structure and supply chain.</p>
+      </div>
+      <div class="step fade-up fade-up-delay-2">
+        <div class="step-number">2</div>
+        <h3>Enrich with intelligence</h3>
+        <p>Product Connect fills the gaps — linking materials to verified impact data, suppliers to certifications, and components to compliance requirements.</p>
+      </div>
+      <div class="step fade-up fade-up-delay-3">
+        <div class="step-number">3</div>
+        <h3>Deploy to the world</h3>
+        <p>Generate EU-compliant Digital Product Passports, QR codes, and digital twins that keep products connected from factory floor to end customer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRODUCT SECTION: SUPPLY CHAIN ===== -->
+<section class="product-section">
+  <div class="container">
+    <div class="product-row">
+      <div class="product-text fade-up">
+        <div class="tag">⛓ Supply Chain Engine</div>
+        <h2>Map your entire supply chain. Automatically.</h2>
+        <p>From raw material to finished product — get full chain-of-custody data with verified transparency. No more spreadsheets. No more guesswork.</p>
+        <ul>
+          <li><span class="li-icon">→</span>Auto-parse BOMs from any format (Excel, ERP exports, CAD)</li>
+          <li><span class="li-icon">→</span>Normalize supplier data across your entire portfolio</li>
+          <li><span class="li-icon">→</span>Link every component to verified impact and sourcing data</li>
+          <li><span class="li-icon">→</span>Sync with Business Central and other ERP systems</li>
+        </ul>
+        <a href="#" class="btn-secondary">Explore Supply Chain Engine →</a>
+      </div>
+      <div class="product-visual fade-up fade-up-delay-2">
+        <div class="mock-ui">
+          <div class="mock-toolbar">
+            <div class="mock-dot"></div>
+            <div class="mock-dot"></div>
+            <div class="mock-dot"></div>
+          </div>
+          <div class="mock-row">
+            <div class="mock-status green"></div>
+            <span class="mock-label">Oak Plywood (FSC certified)</span>
+            <span class="mock-value">supplier: Sveza</span>
+          </div>
+          <div class="mock-row">
+            <div class="mock-status green"></div>
+            <span class="mock-label">Steel Frame (recycled)</span>
+            <span class="mock-value">supplier: SSAB</span>
+          </div>
+          <div class="mock-row">
+            <div class="mock-status yellow"></div>
+            <span class="mock-label">Surface Coating</span>
+            <span class="mock-value">awaiting cert</span>
+          </div>
+          <div class="mock-row">
+            <div class="mock-status green"></div>
+            <span class="mock-label">Packaging (mono-material)</span>
+            <span class="mock-value">supplier: Smurfit</span>
+          </div>
+          <div class="mock-row">
+            <div class="mock-status blue"></div>
+            <span class="mock-label">Assembly → Copenhagen DK</span>
+            <span class="mock-value">co2: 2.4 kg</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRODUCT SECTION: DPP STUDIO ===== -->
+<section class="product-section">
+  <div class="container">
+    <div class="product-row reversed">
+      <div class="product-text fade-up">
+        <div class="tag">📋 DPP Studio</div>
+        <h2>Design, generate, and deploy compliant Digital Product Passports.</h2>
+        <p>Every product gets a scannable identity — from factory floor to end customer. Machine-readable, EU-compliant, and beautiful.</p>
+        <ul>
+          <li><span class="li-icon">→</span>Auto-generate passports from your product graph</li>
+          <li><span class="li-icon">→</span>QR codes that link to living digital twins</li>
+          <li><span class="li-icon">→</span>Full material disclosure and chemical safety data</li>
+          <li><span class="li-icon">→</span>Repair instructions, spare parts ordering, and take-back</li>
+        </ul>
+        <a href="#" class="btn-secondary">Explore DPP Studio →</a>
+      </div>
+      <div class="product-visual fade-up fade-up-delay-2">
+        <div class="mock-ui">
+          <div class="mock-toolbar">
+            <div class="mock-dot"></div>
+            <div class="mock-dot"></div>
+            <div class="mock-dot"></div>
+          </div>
+          <div style="text-align: center; padding: 24px 0;">
+            <div style="width: 100px; height: 100px; border: 2px solid var(--border-light); border-radius: 14px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                <path d="M20 4L34 12V28L20 36L6 28V12L20 4Z" stroke="rgba(168,224,108,0.4)" stroke-width="1.5"/>
+                <path d="M20 4L34 12V28L20 36L6 28V12L20 4Z" fill="rgba(168,224,108,0.05)"/>
+                <circle cx="20" cy="20" r="6" fill="rgba(168,224,108,0.15)" stroke="rgba(168,224,108,0.3)" stroke-width="1"/>
+              </svg>
+            </div>
+            <div style="font-weight: 650; font-size: 17px; margin-bottom: 4px; letter-spacing: -0.02em;">Loop Chair Pro</div>
+            <div style="font-size: 12px; color: var(--text-dim); margin-bottom: 20px; font-family: 'SF Mono', monospace;">DPP-2026-FRN-00847</div>
+            <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+              <span style="padding: 5px 14px; background: rgba(34,197,94,0.1); color: #22c55e; border-radius: 100px; font-size: 11px; font-weight: 600; border: 1px solid rgba(34,197,94,0.15);">EU Compliant</span>
+              <span style="padding: 5px 14px; background: rgba(59,130,246,0.1); color: #3b82f6; border-radius: 100px; font-size: 11px; font-weight: 600; border: 1px solid rgba(59,130,246,0.15);">FSC Certified</span>
+              <span style="padding: 5px 14px; background: rgba(200,255,0,0.08); color: var(--accent); border-radius: 100px; font-size: 11px; font-weight: 600; border: 1px solid rgba(200,255,0,0.12);">3D Twin Active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== METRICS ===== -->
+<section class="metrics">
+  <div class="container">
+    <div class="metrics-grid">
+      <div class="metric-item fade-up fade-up-delay-1">
+        <h3>50K+</h3>
+        <p>Products connected</p>
+      </div>
+      <div class="metric-item fade-up fade-up-delay-2">
+        <h3>200+</h3>
+        <p>Supply chains mapped</p>
+      </div>
+      <div class="metric-item fade-up fade-up-delay-3">
+        <h3>98%</h3>
+        <p>Compliance accuracy</p>
+      </div>
+      <div class="metric-item fade-up fade-up-delay-4">
+        <h3>10x</h3>
+        <p>Faster DPP generation</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIAL ===== -->
+<section class="testimonial">
+  <div class="container">
+    <div class="testimonial-card fade-up">
+      <div class="testimonial-content">
+        <blockquote>Product Connect gave us complete visibility into our supply chain and helped us deploy Digital Product Passports months ahead of schedule.</blockquote>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">H</div>
+          <div>
+            <div class="testimonial-name">Head of Sustainability</div>
+            <div class="testimonial-role">Leading Nordic Furniture Brand</div>
+          </div>
+        </div>
+        <div class="testimonial-stats">
+          <div class="stat-item">
+            <h4>+50%</h4>
+            <p>Faster compliance</p>
+          </div>
+          <div class="stat-item">
+            <h4>+145%</h4>
+            <p>ROI first year</p>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-visual">
+        <div class="testimonial-logo">HAY</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== INFRASTRUCTURE GRID ===== -->
+<section class="infra">
+  <div class="container">
+    <div class="section-header fade-up">
+      <h2>The full infrastructure stack</h2>
+      <p>Everything you need to make products intelligent — and keep them that way</p>
+    </div>
+    <div class="infra-grid">
+      <div class="infra-card fade-up fade-up-delay-1">
+        <div class="ic-icon">⟲</div>
+        <h3>BOM Parser</h3>
+        <p>Automatically ingest bills of materials from any format, normalize supplier data, and connect components to verified impact and sourcing intelligence.</p>
+      </div>
+      <div class="infra-card fade-up fade-up-delay-2">
+        <div class="ic-icon">⬡</div>
+        <h3>Model Parser</h3>
+        <p>Extract product structure from CAD files — Solidworks, Fusion, Rhino, or STEP — and automatically link 3D geometry to material and supply chain data.</p>
+      </div>
+      <div class="infra-card fade-up fade-up-delay-1">
+        <div class="ic-icon">◉</div>
+        <h3>Digital Twin Engine</h3>
+        <p>Create living digital replicas that track real-world state, ownership, maintenance history, and end-of-life status throughout the product lifecycle.</p>
+      </div>
+      <div class="infra-card fade-up fade-up-delay-2">
+        <div class="ic-icon">⇌</div>
+        <h3>ERP Connector</h3>
+        <p>Sync seamlessly with Business Central and other ERP systems to connect product data, supplier networks, and commercial operations in a single source of truth.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FINAL CTA ===== -->
+<section class="final-cta">
+  <div class="final-cta-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+  <div class="container">
+    <div class="final-cta-content fade-up">
+      <h2>Ready to add <em>intelligence</em><br>to your products?</h2>
+      <p>Join the leading manufacturers building the infrastructure for products that last.</p>
+      <div class="hero-ctas">
+        <a href="#" class="btn-primary"><span>Start building for free →</span></a>
+        <a href="#" class="btn-secondary">Talk to sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+          Product Connect
+        </a>
+        <p>Infrastructure for products that last — and manufacturers who lead.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#">Platform</a>
+        <a href="#">Pricing</a>
+        <a href="#">Changelog</a>
+        <a href="#">API Docs</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="#">Careers</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Terms of service</a>
+        <a href="#">Privacy policy</a>
+        <a href="#">Cookie policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Product Connect. All rights reserved.</span>
+      <span>Built in Copenhagen</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+// ==============================
+// ANIMATED PARTICLE NETWORK CANVAS
+// ==============================
+(function() {
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let w, h;
+  let particles = [];
+  let mouse = { x: null, y: null };
+  const PARTICLE_COUNT = 80;
+  const CONNECTION_DIST = 150;
+  const MOUSE_DIST = 200;
+
+  function resize() {
+    w = canvas.width = canvas.offsetWidth;
+    h = canvas.height = canvas.offsetHeight;
+  }
+
+  function createParticle() {
+    return {
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      r: Math.random() * 2 + 0.5,
+      color: Math.random() > 0.7
+        ? `rgba(168, 224, 108, ${Math.random() * 0.5 + 0.2})`
+        : Math.random() > 0.5
+          ? `rgba(100, 160, 255, ${Math.random() * 0.3 + 0.1})`
+          : `rgba(180, 120, 255, ${Math.random() * 0.2 + 0.1})`
+    };
+  }
+
+  function init() {
+    resize();
+    particles = [];
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push(createParticle());
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+
+    // Draw connections
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < CONNECTION_DIST) {
+          const alpha = (1 - dist / CONNECTION_DIST) * 0.12;
+          ctx.strokeStyle = `rgba(168, 224, 108, ${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Draw connections to mouse
+    if (mouse.x !== null) {
+      for (let i = 0; i < particles.length; i++) {
+        const dx = particles[i].x - mouse.x;
+        const dy = particles[i].y - mouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < MOUSE_DIST) {
+          const alpha = (1 - dist / MOUSE_DIST) * 0.25;
+          ctx.strokeStyle = `rgba(168, 224, 108, ${alpha})`;
+          ctx.lineWidth = 0.8;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Draw particles
+    for (let p of particles) {
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Add glow for accent particles
+      if (p.color.includes('200, 255, 0')) {
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = 'rgba(168, 224, 108, 0.3)';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
+      // Update position
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // Bounce off edges
+      if (p.x < 0 || p.x > w) p.vx *= -1;
+      if (p.y < 0 || p.y > h) p.vy *= -1;
+
+      // Mouse repulsion
+      if (mouse.x !== null) {
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < MOUSE_DIST) {
+          const force = (MOUSE_DIST - dist) / MOUSE_DIST * 0.02;
+          p.vx += dx / dist * force;
+          p.vy += dy / dist * force;
+        }
+      }
+
+      // Damping
+      p.vx *= 0.999;
+      p.vy *= 0.999;
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  canvas.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    mouse.x = null;
+    mouse.y = null;
+  });
+
+  window.addEventListener('resize', () => {
+    resize();
+  });
+
+  init();
+  draw();
+})();
+
+// ==============================
+// SCROLL-TRIGGERED FADE-IN
+// ==============================
+(function() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.fade-up').forEach(el => {
+    observer.observe(el);
+  });
+})();
+
+// ==============================
+// SMOOTH PARALLAX ON ORBS
+// ==============================
+(function() {
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const scrolled = window.pageYOffset;
+        const orbs = document.querySelectorAll('.hero-atmosphere .orb');
+        orbs.forEach((orb, i) => {
+          const speed = 0.03 + i * 0.015;
+          orb.style.transform += ` translateY(${scrolled * speed}px)`;
+        });
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+})();
+
+// Mouse-following spotlight on feature cards
+document.querySelectorAll('.feature-card').forEach(card => {
+  const glow = card.querySelector('.feature-card-glow');
+  if (!glow) return;
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    glow.style.left = (e.clientX - rect.left - 150) + 'px';
+    glow.style.top = (e.clientY - rect.top - 150) + 'px';
+  });
+  card.addEventListener('mouseenter', () => { glow.style.opacity = '1'; });
+  card.addEventListener('mouseleave', () => { glow.style.opacity = '0'; });
+});
+
+// ==============================
+// MANIFESTO SCROLL-REVEAL
+// ==============================
+(function() {
+  const container = document.getElementById('manifestoText');
+  if (!container) return;
+
+  // Split each reveal-line into individual word spans
+  const lines = container.querySelectorAll('.reveal-line');
+  const allWords = [];
+
+  lines.forEach(line => {
+    const text = line.textContent.trim();
+    const isAccent = line.dataset.accent === 'true';
+    const isDim = line.dataset.dim === 'true';
+    const words = text.split(/\s+/);
+
+    line.textContent = '';
+    words.forEach(word => {
+      const span = document.createElement('span');
+      span.className = 'reveal-word';
+      if (isAccent) span.classList.add('accent-word');
+      if (isDim) span.classList.add('dim-word');
+      span.textContent = word;
+      line.appendChild(span);
+      allWords.push(span);
+    });
+  });
+
+  const totalWords = allWords.length;
+  const stickyContainer = document.querySelector('.manifesto-sticky');
+
+  function onScroll() {
+    const rect = stickyContainer.getBoundingClientRect();
+    const stickyHeight = stickyContainer.offsetHeight;
+    const viewH = window.innerHeight;
+
+    // Progress: 0 at start of sticky, 1 when sticky section ends
+    const scrolled = -rect.top;
+    const scrollRange = stickyHeight - viewH;
+    const progress = Math.max(0, Math.min(1, scrolled / scrollRange));
+
+    // Map progress to word index — reveal words progressively
+    const wordsToLight = Math.floor(progress * totalWords);
+
+    allWords.forEach((word, i) => {
+      if (i < wordsToLight) {
+        word.classList.add('lit');
+      } else {
+        word.classList.remove('lit');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll(); // initial state
+})();
+</script>
+
+</body>
+</html>
