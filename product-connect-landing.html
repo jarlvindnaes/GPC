@@ -728,7 +728,7 @@ h1 em {
 
 /* Feature card graphic area */
 .feature-graphic {
-  height: 200px;
+  height: 280px;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -736,16 +736,122 @@ h1 em {
   justify-content: center;
 }
 
+.feature-graphic .feature-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+}
+
+.feature-graphic .tech-grid {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 24px 24px;
+  z-index: 0;
+  opacity: 0.5;
+}
+
 .feature-graphic .deco-dots {
   position: absolute; width: 100%; height: 100%;
-  background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
-  background-size: 20px 20px;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1.5px, transparent 1.5px);
+  background-size: 28px 28px;
+  z-index: 0;
+}
+
+.feature-graphic .shimmer-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  z-index: 3;
+  animation: shimmerSweep 4s ease-in-out infinite;
+  opacity: 0.6;
+}
+
+@keyframes shimmerSweep {
+  0% { transform: translateY(0); opacity: 0; }
+  50% { opacity: 0.6; }
+  100% { transform: translateY(280px); opacity: 0; }
+}
+
+.feature-graphic .scan-line {
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  z-index: 2;
+  animation: scanMove 8s linear infinite;
+}
+
+@keyframes scanMove {
+  0% { top: 0%; opacity: 0.3; }
+  50% { opacity: 0.6; }
+  100% { top: 100%; opacity: 0.3; }
+}
+
+.feature-graphic .corner-marks {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.feature-graphic .corner-mark {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid;
+}
+
+.feature-graphic .corner-mark.top-left {
+  top: 8px;
+  left: 8px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.feature-graphic .corner-mark.top-right {
+  top: 8px;
+  right: 8px;
+  border-left: none;
+  border-bottom: none;
+}
+
+.feature-graphic .corner-mark.bottom-left {
+  bottom: 8px;
+  left: 8px;
+  border-right: none;
+  border-top: none;
+}
+
+.feature-graphic .corner-mark.bottom-right {
+  bottom: 8px;
+  right: 8px;
+  border-left: none;
+  border-top: none;
 }
 
 .feature-graphic .glow-orb {
   position: absolute; width: 160px; height: 160px; border-radius: 50%;
-  filter: blur(50px); opacity: 0.2;
+  filter: blur(50px); opacity: 0.25;
   animation: featureOrbFloat 8s ease-in-out infinite;
+  z-index: 1;
+  transition: opacity 0.4s ease;
+}
+
+.feature-graphic .glow-orb.secondary {
+  width: 120px;
+  height: 120px;
+  filter: blur(40px);
+  opacity: 0.15;
+  animation: featureOrbFloat2 10s ease-in-out infinite;
 }
 
 @keyframes featureOrbFloat {
@@ -754,10 +860,17 @@ h1 em {
   66% { transform: translate(-8px, 6px); }
 }
 
+@keyframes featureOrbFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-15px, 8px) scale(1.1); }
+}
+
 .feature-graphic .deco-ring {
   position: absolute; border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.04);
+  border: 1px solid;
   animation: featureRingPulse 6s ease-in-out infinite;
+  z-index: 1;
+  transition: opacity 0.4s ease;
 }
 
 @keyframes featureRingPulse {
@@ -766,22 +879,68 @@ h1 em {
 }
 
 .feature-graphic svg.pillar-icon {
-  width: 64px; height: 64px;
-  position: relative; z-index: 2;
-  filter: drop-shadow(0 0 24px currentColor);
+  width: 80px; height: 80px;
+  position: relative; z-index: 4;
+  filter: drop-shadow(0 0 32px currentColor);
+  transition: filter 0.4s ease;
+}
+
+.feature-card:hover .feature-graphic svg.pillar-icon {
+  filter: drop-shadow(0 0 48px currentColor);
+}
+
+.feature-card:hover .feature-graphic .glow-orb {
+  opacity: 0.4;
+  animation-duration: 4s;
+}
+
+.feature-card:hover .feature-graphic .glow-orb.secondary {
+  opacity: 0.25;
+  animation-duration: 5s;
+}
+
+.feature-card:hover .feature-graphic .deco-ring {
+  opacity: 0.9;
 }
 
 .feature-graphic.compliance-bg {
   background: linear-gradient(135deg, #0a1a0a 0%, #0d2810 50%, #050505 100%);
 }
+.feature-graphic.compliance-bg .corner-mark {
+  border-color: rgba(168, 224, 108, 0.25);
+}
+.feature-graphic.compliance-bg .shimmer-line {
+  background: linear-gradient(90deg, transparent, rgba(168, 224, 108, 0.4), transparent);
+}
+
 .feature-graphic.intelligence-bg {
   background: linear-gradient(135deg, #050a14 0%, #081828 50%, #050505 100%);
 }
+.feature-graphic.intelligence-bg .corner-mark {
+  border-color: rgba(0, 184, 255, 0.25);
+}
+.feature-graphic.intelligence-bg .shimmer-line {
+  background: linear-gradient(90deg, transparent, rgba(0, 184, 255, 0.4), transparent);
+}
+
 .feature-graphic.connected-bg {
   background: linear-gradient(135deg, #0f0818 0%, #150d25 50%, #050505 100%);
 }
+.feature-graphic.connected-bg .corner-mark {
+  border-color: rgba(167, 139, 250, 0.25);
+}
+.feature-graphic.connected-bg .shimmer-line {
+  background: linear-gradient(90deg, transparent, rgba(167, 139, 250, 0.4), transparent);
+}
+
 .feature-graphic.mcp-bg {
   background: linear-gradient(135deg, #050f0d 0%, #041a15 50%, #050505 100%);
+}
+.feature-graphic.mcp-bg .corner-mark {
+  border-color: rgba(0, 217, 159, 0.25);
+}
+.feature-graphic.mcp-bg .shimmer-line {
+  background: linear-gradient(90deg, transparent, rgba(0, 217, 159, 0.4), transparent);
 }
 
 /* Feature card body */
@@ -1754,9 +1913,20 @@ footer::before {
       <div class="feature-card fade-up fade-up-delay-1">
         <div class="feature-card-glow"></div>
         <div class="feature-graphic compliance-bg">
+          <div class="tech-grid"></div>
           <div class="deco-dots"></div>
+          <canvas class="feature-canvas" data-theme="compliance"></canvas>
           <div class="glow-orb" style="background: rgba(168,224,108,0.35); top: 20%; left: 25%;"></div>
-          <div class="deco-ring" style="width: 120px; height: 120px; top: 10%; right: 8%; border-color: rgba(168,224,108,0.06);"></div>
+          <div class="glow-orb secondary" style="background: rgba(168,224,108,0.25); bottom: 15%; right: 15%;"></div>
+          <div class="deco-ring" style="width: 120px; height: 120px; top: 10%; right: 8%; border-color: rgba(168,224,108,0.15);"></div>
+          <div class="shimmer-line"></div>
+          <div class="scan-line"></div>
+          <div class="corner-marks">
+            <div class="corner-mark top-left"></div>
+            <div class="corner-mark top-right"></div>
+            <div class="corner-mark bottom-left"></div>
+            <div class="corner-mark bottom-right"></div>
+          </div>
           <svg class="pillar-icon" viewBox="0 0 64 64" fill="none" style="color: #a8e06c;">
             <rect x="10" y="18" width="44" height="36" rx="3" stroke="currentColor" stroke-width="1.2" fill="rgba(168,224,108,0.05)"/>
             <path d="M18 30h28M18 37h20M18 44h24" stroke="currentColor" stroke-width="1.2" opacity="0.4"/>
@@ -1774,9 +1944,20 @@ footer::before {
       <div class="feature-card fade-up fade-up-delay-2">
         <div class="feature-card-glow"></div>
         <div class="feature-graphic intelligence-bg">
+          <div class="tech-grid"></div>
           <div class="deco-dots"></div>
+          <canvas class="feature-canvas" data-theme="intelligence"></canvas>
           <div class="glow-orb" style="background: rgba(0,184,255,0.3); bottom: 20%; right: 20%;"></div>
-          <div class="deco-ring" style="width: 100px; height: 100px; bottom: 15%; left: 10%; border-color: rgba(0,184,255,0.06); animation-delay: -2s;"></div>
+          <div class="glow-orb secondary" style="background: rgba(0,184,255,0.25); top: 15%; left: 20%;"></div>
+          <div class="deco-ring" style="width: 100px; height: 100px; bottom: 15%; left: 10%; border-color: rgba(0,184,255,0.15); animation-delay: -2s;"></div>
+          <div class="shimmer-line"></div>
+          <div class="scan-line"></div>
+          <div class="corner-marks">
+            <div class="corner-mark top-left"></div>
+            <div class="corner-mark top-right"></div>
+            <div class="corner-mark bottom-left"></div>
+            <div class="corner-mark bottom-right"></div>
+          </div>
           <svg class="pillar-icon" viewBox="0 0 64 64" fill="none" style="color: #00b8ff;">
             <circle cx="32" cy="28" r="14" stroke="currentColor" stroke-width="1.2" fill="rgba(0,184,255,0.05)"/>
             <path d="M25 28l4 4 8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
@@ -1798,13 +1979,24 @@ footer::before {
       <div class="feature-card fade-up fade-up-delay-3">
         <div class="feature-card-glow"></div>
         <div class="feature-graphic connected-bg">
+          <div class="tech-grid"></div>
           <div class="deco-dots"></div>
-          <div class="glow-orb" style="background: rgba(139,92,246,0.3); top: 25%; right: 25%;"></div>
-          <div class="deco-ring" style="width: 140px; height: 140px; bottom: 5%; left: 5%; border-color: rgba(139,92,246,0.06); animation-delay: -3s;"></div>
+          <canvas class="feature-canvas" data-theme="connected"></canvas>
+          <div class="glow-orb" style="background: rgba(167,139,250,0.3); top: 25%; right: 25%;"></div>
+          <div class="glow-orb secondary" style="background: rgba(167,139,250,0.25); bottom: 20%; left: 15%;"></div>
+          <div class="deco-ring" style="width: 140px; height: 140px; bottom: 5%; left: 5%; border-color: rgba(167,139,250,0.15); animation-delay: -3s;"></div>
+          <div class="shimmer-line"></div>
+          <div class="scan-line"></div>
+          <div class="corner-marks">
+            <div class="corner-mark top-left"></div>
+            <div class="corner-mark top-right"></div>
+            <div class="corner-mark bottom-left"></div>
+            <div class="corner-mark bottom-right"></div>
+          </div>
           <svg class="pillar-icon" viewBox="0 0 64 64" fill="none" style="color: #a78bfa;">
-            <rect x="8" y="8" width="20" height="20" rx="4" stroke="currentColor" stroke-width="1.2" fill="rgba(139,92,246,0.05)"/>
-            <rect x="36" y="8" width="20" height="20" rx="4" stroke="currentColor" stroke-width="1.2" fill="rgba(139,92,246,0.05)"/>
-            <rect x="22" y="36" width="20" height="20" rx="4" stroke="currentColor" stroke-width="1.2" fill="rgba(139,92,246,0.05)"/>
+            <rect x="8" y="8" width="20" height="20" rx="4" stroke="currentColor" stroke-width="1.2" fill="rgba(167,139,250,0.05)"/>
+            <rect x="36" y="8" width="20" height="20" rx="4" stroke="currentColor" stroke-width="1.2" fill="rgba(167,139,250,0.05)"/>
+            <rect x="22" y="36" width="20" height="20" rx="4" stroke="currentColor" stroke-width="1.2" fill="rgba(167,139,250,0.05)"/>
             <path d="M24 28l4 8M40 28l-4 8" stroke="currentColor" stroke-width="1" opacity="0.3"/>
             <circle cx="18" cy="18" r="3" fill="currentColor" opacity="0.4"/>
             <circle cx="46" cy="18" r="3" fill="currentColor" opacity="0.4"/>
@@ -1816,7 +2008,7 @@ footer::before {
         </div>
         <div class="feature-body">
           <h3>Connected Products</h3>
-          <p>QR-enabled passports turn objects into intelligent assets. Spare parts, repairs, upgrades, take-back — every scan deepens the relationship.</p>
+          <p>QR-enabled passports turn every product into a storefront. Spare parts, repairs, upgrades — turn unknown owners into lifelong customers. Every scan deepens engagement and revenue potential.</p>
         </div>
       </div>
 
@@ -1824,9 +2016,20 @@ footer::before {
       <div class="feature-card fade-up fade-up-delay-4">
         <div class="feature-card-glow"></div>
         <div class="feature-graphic mcp-bg">
+          <div class="tech-grid"></div>
           <div class="deco-dots"></div>
+          <canvas class="feature-canvas" data-theme="mcp"></canvas>
           <div class="glow-orb" style="background: rgba(0,217,159,0.3); top: 30%; left: 20%;"></div>
-          <div class="deco-ring" style="width: 110px; height: 110px; top: 8%; right: 12%; border-color: rgba(0,217,159,0.06); animation-delay: -1.5s;"></div>
+          <div class="glow-orb secondary" style="background: rgba(0,217,159,0.25); bottom: 18%; right: 18%;"></div>
+          <div class="deco-ring" style="width: 110px; height: 110px; top: 8%; right: 12%; border-color: rgba(0,217,159,0.15); animation-delay: -1.5s;"></div>
+          <div class="shimmer-line"></div>
+          <div class="scan-line"></div>
+          <div class="corner-marks">
+            <div class="corner-mark top-left"></div>
+            <div class="corner-mark top-right"></div>
+            <div class="corner-mark bottom-left"></div>
+            <div class="corner-mark bottom-right"></div>
+          </div>
           <svg class="pillar-icon" viewBox="0 0 64 64" fill="none" style="color: #00d99f;">
             <rect x="6" y="22" width="20" height="20" rx="3" stroke="currentColor" stroke-width="1.2" fill="rgba(0,217,159,0.05)"/>
             <rect x="38" y="22" width="20" height="20" rx="3" stroke="currentColor" stroke-width="1.2" fill="rgba(0,217,159,0.05)"/>
@@ -2390,6 +2593,170 @@ document.querySelectorAll('.feature-card').forEach(card => {
   card.addEventListener('mouseenter', () => { glow.style.opacity = '1'; });
   card.addEventListener('mouseleave', () => { glow.style.opacity = '0'; });
 });
+
+// ==============================
+// FEATURE CARD CANVAS ANIMATIONS
+// ==============================
+(function() {
+  const themeColors = {
+    compliance: { r: 168, g: 224, b: 108 },
+    intelligence: { r: 0, g: 184, b: 255 },
+    connected: { r: 167, g: 139, b: 250 },
+    mcp: { r: 0, g: 217, b: 159 }
+  };
+
+  class FeatureCanvasAnimator {
+    constructor(canvas, theme) {
+      this.canvas = canvas;
+      this.ctx = canvas.getContext('2d');
+      this.theme = theme;
+      this.color = themeColors[theme];
+      this.particles = [];
+      this.particleCount = 24;
+      this.isAnimating = false;
+      this.animationSpeed = 1;
+
+      this.dpr = window.devicePixelRatio || 1;
+      this.resize();
+      this.initParticles();
+
+      window.addEventListener('resize', () => this.resize());
+    }
+
+    resize() {
+      const rect = this.canvas.getBoundingClientRect();
+      this.width = rect.width;
+      this.height = rect.height;
+
+      this.canvas.width = this.width * this.dpr;
+      this.canvas.height = this.height * this.dpr;
+      this.ctx.scale(this.dpr, this.dpr);
+    }
+
+    initParticles() {
+      this.particles = [];
+      for (let i = 0; i < this.particleCount; i++) {
+        this.particles.push({
+          x: Math.random() * this.width,
+          y: Math.random() * this.height,
+          vx: (Math.random() - 0.5) * 0.8,
+          vy: -(Math.random() * 0.4 + 0.2),
+          radius: Math.random() * 1.5 + 0.8,
+          opacity: Math.random() * 0.6 + 0.3,
+          life: Math.random() * 0.5 + 0.5,
+          maxLife: 1
+        });
+      }
+    }
+
+    draw() {
+      if (!this.isAnimating) return;
+
+      this.ctx.clearRect(0, 0, this.width, this.height);
+
+      // Update and draw particles
+      this.particles.forEach((p, i) => {
+        p.y += p.vy * this.animationSpeed;
+        p.x += p.vx * this.animationSpeed;
+        p.life -= 0.008 * this.animationSpeed;
+
+        if (p.life <= 0) {
+          this.particles[i] = {
+            x: Math.random() * this.width,
+            y: this.height + 10,
+            vx: (Math.random() - 0.5) * 0.8,
+            vy: -(Math.random() * 0.4 + 0.2),
+            radius: Math.random() * 1.5 + 0.8,
+            opacity: Math.random() * 0.6 + 0.3,
+            life: 1,
+            maxLife: 1
+          };
+        }
+      });
+
+      // Draw connection lines between nearby particles
+      for (let i = 0; i < this.particles.length; i++) {
+        for (let j = i + 1; j < this.particles.length; j++) {
+          const dx = this.particles[i].x - this.particles[j].x;
+          const dy = this.particles[i].y - this.particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 80) {
+            const opacity = (1 - distance / 80) * 0.15 * this.particles[i].life;
+            this.ctx.strokeStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${opacity})`;
+            this.ctx.lineWidth = 0.5;
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
+            this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
+            this.ctx.stroke();
+          }
+        }
+      }
+
+      // Draw particles
+      this.particles.forEach(p => {
+        const alpha = p.life * p.opacity;
+        this.ctx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha})`;
+        this.ctx.beginPath();
+        this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Glow effect
+        this.ctx.strokeStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha * 0.5})`;
+        this.ctx.lineWidth = 1;
+        this.ctx.beginPath();
+        this.ctx.arc(p.x, p.y, p.radius + 2, 0, Math.PI * 2);
+        this.ctx.stroke();
+      });
+
+      requestAnimationFrame(() => this.draw());
+    }
+
+    start() {
+      if (!this.isAnimating) {
+        this.isAnimating = true;
+        this.draw();
+      }
+    }
+
+    stop() {
+      this.isAnimating = false;
+    }
+  }
+
+  // Initialize canvas animations with IntersectionObserver
+  const animators = new Map();
+
+  document.querySelectorAll('.feature-canvas').forEach(canvas => {
+    const theme = canvas.dataset.theme;
+    const animator = new FeatureCanvasAnimator(canvas, theme);
+    animators.set(canvas, animator);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animator.start();
+          animator.animationSpeed = 1;
+        } else {
+          animator.stop();
+        }
+      });
+    }, { threshold: 0.1 });
+
+    observer.observe(canvas);
+
+    // Speed up animation on hover
+    const card = canvas.closest('.feature-card');
+    if (card) {
+      card.addEventListener('mouseenter', () => {
+        animator.animationSpeed = 1.5;
+      });
+      card.addEventListener('mouseleave', () => {
+        animator.animationSpeed = 1;
+      });
+    }
+  });
+})();
 
 // ==============================
 // MANIFESTO SCROLL-REVEAL
