@@ -613,19 +613,22 @@ h1 em {
   align-items: center;
   justify-content: center;
   padding: 80px 24px;
+  background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(168, 224, 108, 0.015), transparent);
 }
 
 .manifesto-text {
-  max-width: 900px;
+  max-width: 780px;
   margin: 0 auto;
+  text-align: center;
 }
 
 .manifesto-text .reveal-line {
-  font-size: clamp(28px, 4.5vw, 48px);
-  font-weight: 700;
-  line-height: 1.35;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.4em;
+  font-size: clamp(26px, 4.2vw, 44px);
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.025em;
+  margin-bottom: 0.5em;
+  font-family: 'Inter', sans-serif;
 }
 
 .manifesto-text .reveal-line:last-child {
@@ -634,25 +637,26 @@ h1 em {
 
 .manifesto-text .reveal-word {
   display: inline-block;
-  color: rgba(255, 255, 255, 0.12);
-  transition: color 0.05s ease;
-  margin-right: 0.25em;
+  color: rgba(255, 255, 255, 0.06);
+  transition: color 0.12s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 0.12s ease;
+  margin-right: 0.22em;
 }
 
 .manifesto-text .reveal-word.lit {
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .manifesto-text .reveal-word.accent-word.lit {
   color: var(--accent);
+  text-shadow: 0 0 30px rgba(168, 224, 108, 0.15);
 }
 
 .manifesto-text .reveal-word.dim-word.lit {
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.45);
 }
 
 .manifesto-text .spacer-line {
-  height: 1.2em;
+  height: 1em;
 }
 
 /* ===== FEATURES GRID ===== */
@@ -2605,131 +2609,388 @@ document.querySelectorAll('.feature-card').forEach(card => {
     mcp: { r: 0, g: 217, b: 159 }
   };
 
-  class FeatureCanvasAnimator {
+  // === BASE ANIMATOR ===
+  class BaseAnimator {
     constructor(canvas, theme) {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
       this.theme = theme;
       this.color = themeColors[theme];
-      this.particles = [];
-      this.particleCount = 24;
       this.isAnimating = false;
       this.animationSpeed = 1;
-
+      this.time = 0;
       this.dpr = window.devicePixelRatio || 1;
       this.resize();
-      this.initParticles();
-
       window.addEventListener('resize', () => this.resize());
     }
-
     resize() {
       const rect = this.canvas.getBoundingClientRect();
       this.width = rect.width;
       this.height = rect.height;
-
       this.canvas.width = this.width * this.dpr;
       this.canvas.height = this.height * this.dpr;
-      this.ctx.scale(this.dpr, this.dpr);
+      this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
     }
+    start() { if (!this.isAnimating) { this.isAnimating = true; this.draw(); } }
+    stop() { this.isAnimating = false; }
+    draw() {
+      if (!this.isAnimating) return;
+      this.time += 0.016 * this.animationSpeed;
+      this.ctx.clearRect(0, 0, this.width, this.height);
+      this.render();
+      requestAnimationFrame(() => this.draw());
+    }
+    render() {} // Override per theme
+  }
 
-    initParticles() {
-      this.particles = [];
-      for (let i = 0; i < this.particleCount; i++) {
-        this.particles.push({
-          x: Math.random() * this.width,
-          y: Math.random() * this.height,
-          vx: (Math.random() - 0.5) * 0.8,
-          vy: -(Math.random() * 0.4 + 0.2),
-          radius: Math.random() * 1.5 + 0.8,
-          opacity: Math.random() * 0.6 + 0.3,
-          life: Math.random() * 0.5 + 0.5,
-          maxLife: 1
+  // 1. COMPLIANCE — Rising data bars that pulse and glow (data validation feel)
+  class ComplianceAnimator extends BaseAnimator {
+    constructor(canvas, theme) {
+      super(canvas, theme);
+      this.bars = [];
+      this.initBars();
+    }
+    initBars() {
+      this.bars = [];
+      const count = 18;
+      for (let i = 0; i < count; i++) {
+        this.bars.push({
+          x: (i / count) * this.width + this.width / count / 2,
+          baseH: Math.random() * 60 + 20,
+          phase: Math.random() * Math.PI * 2,
+          speed: Math.random() * 0.8 + 0.4,
+          width: Math.max(this.width / count - 4, 2),
+          checked: Math.random() > 0.4,
+          checkPhase: Math.random() * 100
         });
       }
     }
+    render() {
+      const { ctx, color, width, height, time } = this;
+      // Subtle horizontal scan line
+      const scanY = (time * 30 * this.animationSpeed) % (height + 40) - 20;
+      const scanGrad = ctx.createLinearGradient(0, scanY - 10, 0, scanY + 10);
+      scanGrad.addColorStop(0, 'transparent');
+      scanGrad.addColorStop(0.5, `rgba(${color.r},${color.g},${color.b},0.06)`);
+      scanGrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = scanGrad;
+      ctx.fillRect(0, scanY - 10, width, 20);
 
-    draw() {
-      if (!this.isAnimating) return;
+      this.bars.forEach(bar => {
+        const h = bar.baseH + Math.sin(time * bar.speed + bar.phase) * 20;
+        const y = height - 20;
+        const alpha = 0.12 + Math.sin(time * bar.speed + bar.phase) * 0.06;
 
-      this.ctx.clearRect(0, 0, this.width, this.height);
+        // Bar glow
+        const grd = ctx.createLinearGradient(0, y - h, 0, y);
+        grd.addColorStop(0, `rgba(${color.r},${color.g},${color.b},${alpha * 2})`);
+        grd.addColorStop(1, `rgba(${color.r},${color.g},${color.b},${alpha * 0.3})`);
+        ctx.fillStyle = grd;
+        ctx.beginPath();
+        ctx.roundRect(bar.x - bar.width / 2, y - h, bar.width, h, 2);
+        ctx.fill();
 
-      // Update and draw particles
-      this.particles.forEach((p, i) => {
-        p.y += p.vy * this.animationSpeed;
-        p.x += p.vx * this.animationSpeed;
-        p.life -= 0.008 * this.animationSpeed;
+        // Top cap glow
+        ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},${alpha * 3})`;
+        ctx.fillRect(bar.x - bar.width / 2, y - h, bar.width, 2);
 
-        if (p.life <= 0) {
-          this.particles[i] = {
-            x: Math.random() * this.width,
-            y: this.height + 10,
-            vx: (Math.random() - 0.5) * 0.8,
-            vy: -(Math.random() * 0.4 + 0.2),
-            radius: Math.random() * 1.5 + 0.8,
-            opacity: Math.random() * 0.6 + 0.3,
-            life: 1,
-            maxLife: 1
-          };
+        // Checkmark on "validated" bars
+        if (bar.checked && time > bar.checkPhase * 0.02) {
+          ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},0.35)`;
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.moveTo(bar.x - 3, y - h - 10);
+          ctx.lineTo(bar.x - 1, y - h - 7);
+          ctx.lineTo(bar.x + 4, y - h - 14);
+          ctx.stroke();
         }
       });
-
-      // Draw connection lines between nearby particles
-      for (let i = 0; i < this.particles.length; i++) {
-        for (let j = i + 1; j < this.particles.length; j++) {
-          const dx = this.particles[i].x - this.particles[j].x;
-          const dy = this.particles[i].y - this.particles[j].y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 80) {
-            const opacity = (1 - distance / 80) * 0.15 * this.particles[i].life;
-            this.ctx.strokeStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${opacity})`;
-            this.ctx.lineWidth = 0.5;
-            this.ctx.beginPath();
-            this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
-            this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
-            this.ctx.stroke();
-          }
-        }
-      }
-
-      // Draw particles
-      this.particles.forEach(p => {
-        const alpha = p.life * p.opacity;
-        this.ctx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha})`;
-        this.ctx.beginPath();
-        this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        this.ctx.fill();
-
-        // Glow effect
-        this.ctx.strokeStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha * 0.5})`;
-        this.ctx.lineWidth = 1;
-        this.ctx.beginPath();
-        this.ctx.arc(p.x, p.y, p.radius + 2, 0, Math.PI * 2);
-        this.ctx.stroke();
-      });
-
-      requestAnimationFrame(() => this.draw());
-    }
-
-    start() {
-      if (!this.isAnimating) {
-        this.isAnimating = true;
-        this.draw();
-      }
-    }
-
-    stop() {
-      this.isAnimating = false;
     }
   }
+
+  // 2. INTELLIGENCE — Neural network: orbiting nodes with pulsing connections
+  class IntelligenceAnimator extends BaseAnimator {
+    constructor(canvas, theme) {
+      super(canvas, theme);
+      this.nodes = [];
+      this.initNodes();
+    }
+    initNodes() {
+      this.nodes = [];
+      const cx = this.width / 2, cy = this.height / 2;
+      // Central node
+      this.nodes.push({ x: cx, y: cy, r: 5, orbit: 0, angle: 0, speed: 0, layer: 0 });
+      // Inner ring
+      for (let i = 0; i < 5; i++) {
+        this.nodes.push({ x: 0, y: 0, r: 3, orbit: 50, angle: (i / 5) * Math.PI * 2, speed: 0.15 + Math.random() * 0.1, layer: 1 });
+      }
+      // Outer ring
+      for (let i = 0; i < 8; i++) {
+        this.nodes.push({ x: 0, y: 0, r: 2, orbit: 95, angle: (i / 8) * Math.PI * 2, speed: 0.08 + Math.random() * 0.06, layer: 2 });
+      }
+    }
+    render() {
+      const { ctx, color, width, height, time, nodes } = this;
+      const cx = width / 2, cy = height / 2;
+
+      // Update positions
+      nodes.forEach(n => {
+        if (n.orbit > 0) {
+          n.angle += n.speed * 0.016 * this.animationSpeed;
+          n.x = cx + Math.cos(n.angle) * n.orbit;
+          n.y = cy + Math.sin(n.angle) * n.orbit * 0.7; // elliptical
+        }
+      });
+
+      // Draw connections — layer 0 to 1, layer 1 to 2
+      nodes.forEach((a, i) => {
+        nodes.forEach((b, j) => {
+          if (j <= i) return;
+          if (Math.abs(a.layer - b.layer) !== 1) return;
+          const dx = a.x - b.x, dy = a.y - b.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            const pulse = 0.5 + Math.sin(time * 2 + i + j) * 0.5;
+            const alpha = (1 - dist / 120) * 0.18 * pulse;
+            ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${alpha})`;
+            ctx.lineWidth = 0.6;
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke();
+          }
+        });
+      });
+
+      // Data pulse traveling along connections
+      const pulseIdx = Math.floor(time * 1.5) % nodes.length;
+      const nextIdx = (pulseIdx + 1) % nodes.length;
+      const t = (time * 1.5) % 1;
+      const px = nodes[pulseIdx].x + (nodes[nextIdx].x - nodes[pulseIdx].x) * t;
+      const py = nodes[pulseIdx].y + (nodes[nextIdx].y - nodes[pulseIdx].y) * t;
+      ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},0.6)`;
+      ctx.beginPath();
+      ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw nodes
+      nodes.forEach((n, i) => {
+        const pulse = 0.6 + Math.sin(time * 2 + i) * 0.4;
+        // Outer glow
+        ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},${0.04 * pulse})`;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r * 4, 0, Math.PI * 2);
+        ctx.fill();
+        // Core
+        ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},${0.3 * pulse})`;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fill();
+        // Bright center
+        ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},${0.7 * pulse})`;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r * 0.4, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+  }
+
+  // 3. CONNECTED — Expanding ripples from QR-scan points (connection/network feel)
+  class ConnectedAnimator extends BaseAnimator {
+    constructor(canvas, theme) {
+      super(canvas, theme);
+      this.ripples = [];
+      this.points = [];
+      this.initPoints();
+    }
+    initPoints() {
+      this.points = [];
+      for (let i = 0; i < 6; i++) {
+        this.points.push({
+          x: Math.random() * this.width * 0.8 + this.width * 0.1,
+          y: Math.random() * this.height * 0.8 + this.height * 0.1,
+          nextRipple: Math.random() * 3
+        });
+      }
+    }
+    render() {
+      const { ctx, color, width, height, time, points } = this;
+
+      // Spawn ripples
+      points.forEach(p => {
+        if (time > p.nextRipple) {
+          this.ripples.push({ x: p.x, y: p.y, r: 0, maxR: 70 + Math.random() * 40, alpha: 0.25 });
+          p.nextRipple = time + 2 + Math.random() * 3;
+        }
+      });
+
+      // Draw & update ripples
+      this.ripples = this.ripples.filter(r => r.alpha > 0.01);
+      this.ripples.forEach(r => {
+        r.r += 0.6 * this.animationSpeed;
+        r.alpha = 0.25 * (1 - r.r / r.maxR);
+        if (r.alpha <= 0) return;
+
+        ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${r.alpha})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(r.x, r.y, r.r, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Second inner ring
+        if (r.r > 10) {
+          ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${r.alpha * 0.5})`;
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.arc(r.x, r.y, r.r * 0.6, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      });
+
+      // Draw connection lines between nearby points
+      points.forEach((a, i) => {
+        points.forEach((b, j) => {
+          if (j <= i) return;
+          const dx = a.x - b.x, dy = a.y - b.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 200) {
+            const pulse = 0.5 + Math.sin(time + i * 2) * 0.5;
+            ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${0.06 * pulse})`;
+            ctx.lineWidth = 0.5;
+            ctx.setLineDash([4, 6]);
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
+        });
+      });
+
+      // Draw anchor points
+      points.forEach((p, i) => {
+        const pulse = 0.5 + Math.sin(time * 1.5 + i) * 0.5;
+        ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},${0.35 * pulse})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        // Mini QR square
+        ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${0.2 * pulse})`;
+        ctx.lineWidth = 0.8;
+        ctx.strokeRect(p.x - 6, p.y - 6, 12, 12);
+      });
+    }
+  }
+
+  // 4. MCP — Streaming data packets moving along pathways (protocol/API feel)
+  class McpAnimator extends BaseAnimator {
+    constructor(canvas, theme) {
+      super(canvas, theme);
+      this.lanes = [];
+      this.packets = [];
+      this.initLanes();
+    }
+    initLanes() {
+      this.lanes = [];
+      const count = 7;
+      for (let i = 0; i < count; i++) {
+        const y = (i + 1) / (count + 1) * this.height;
+        this.lanes.push({ y, dir: i % 2 === 0 ? 1 : -1, speed: 0.3 + Math.random() * 0.5 });
+      }
+      // Init packets
+      this.packets = [];
+      for (let i = 0; i < 20; i++) {
+        const lane = this.lanes[Math.floor(Math.random() * this.lanes.length)];
+        this.packets.push({
+          x: Math.random() * this.width,
+          lane,
+          size: Math.random() * 16 + 6,
+          speed: lane.speed * (0.8 + Math.random() * 0.4),
+          alpha: Math.random() * 0.3 + 0.1
+        });
+      }
+    }
+    render() {
+      const { ctx, color, width, height, time, lanes, packets } = this;
+
+      // Draw lanes (subtle horizontal lines)
+      lanes.forEach(lane => {
+        ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},0.04)`;
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(0, lane.y);
+        ctx.lineTo(width, lane.y);
+        ctx.stroke();
+      });
+
+      // Update & draw packets
+      packets.forEach(p => {
+        p.x += p.lane.dir * p.speed * this.animationSpeed;
+        // Wrap around
+        if (p.lane.dir > 0 && p.x > width + 20) p.x = -20;
+        if (p.lane.dir < 0 && p.x < -20) p.x = width + 20;
+
+        const pulse = 0.7 + Math.sin(time * 3 + p.x * 0.02) * 0.3;
+        const a = p.alpha * pulse;
+
+        // Packet body (rounded rect)
+        ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},${a})`;
+        ctx.beginPath();
+        ctx.roundRect(p.x - p.size / 2, p.lane.y - 2, p.size, 4, 2);
+        ctx.fill();
+
+        // Leading glow
+        const glowX = p.lane.dir > 0 ? p.x + p.size / 2 : p.x - p.size / 2;
+        ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},${a * 1.5})`;
+        ctx.beginPath();
+        ctx.arc(glowX, p.lane.y, 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Trail
+        const trailLen = p.size * 2;
+        const trailX = p.lane.dir > 0 ? p.x - p.size / 2 - trailLen : p.x + p.size / 2;
+        const trailGrad = ctx.createLinearGradient(trailX, 0, trailX + trailLen * p.lane.dir, 0);
+        trailGrad.addColorStop(0, 'transparent');
+        trailGrad.addColorStop(1, `rgba(${color.r},${color.g},${color.b},${a * 0.3})`);
+        ctx.fillStyle = trailGrad;
+        ctx.fillRect(
+          p.lane.dir > 0 ? trailX : p.x + p.size / 2,
+          p.lane.y - 1,
+          trailLen, 2
+        );
+      });
+
+      // Central hub indicators (left & right)
+      [15, width - 15].forEach((hx, hi) => {
+        const pulse = 0.5 + Math.sin(time * 2 + hi * Math.PI) * 0.5;
+        ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${0.15 * pulse})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(hx, height / 2, 8, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},${0.3 * pulse})`;
+        ctx.beginPath();
+        ctx.arc(hx, height / 2, 3, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+  }
+
+  // Map theme → animator class
+  const animatorClasses = {
+    compliance: ComplianceAnimator,
+    intelligence: IntelligenceAnimator,
+    connected: ConnectedAnimator,
+    mcp: McpAnimator
+  };
 
   // Initialize canvas animations with IntersectionObserver
   const animators = new Map();
 
   document.querySelectorAll('.feature-canvas').forEach(canvas => {
     const theme = canvas.dataset.theme;
-    const animator = new FeatureCanvasAnimator(canvas, theme);
+    const AnimClass = animatorClasses[theme] || BaseAnimator;
+    const animator = new AnimClass(canvas, theme);
     animators.set(canvas, animator);
 
     const observer = new IntersectionObserver((entries) => {
