@@ -679,9 +679,11 @@ h1 em {
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 14px;
 }
+
+@media (max-width: 1024px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
 
 .feature-card {
   background: var(--bg-card);
@@ -1305,6 +1307,180 @@ h1 em {
 
 .final-cta .hero-ctas { margin-bottom: 0; }
 
+/* ===== EPD KILLER FEATURE ===== */
+.epd-section {
+  padding: 120px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.epd-section::before {
+  content: '';
+  position: absolute;
+  width: 800px; height: 800px;
+  background: radial-gradient(circle, rgba(168,224,108,0.06), transparent 60%);
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.epd-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+@media (max-width: 768px) { .epd-content { grid-template-columns: 1fr; gap: 40px; } }
+
+.epd-text .epd-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding: 6px 14px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(168,224,108,0.15);
+  border-radius: 50px;
+}
+
+.epd-text h2 {
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  margin-bottom: 24px;
+}
+
+.epd-text h2 em {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.epd-text .epd-lead {
+  font-size: 17px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  margin-bottom: 32px;
+}
+
+.epd-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.epd-stat {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+}
+
+.epd-stat .stat-old {
+  font-size: 13px;
+  color: #666;
+  text-decoration: line-through;
+  margin-bottom: 4px;
+}
+
+.epd-stat .stat-new {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+
+.epd-stat .stat-desc {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+.epd-visual {
+  position: relative;
+}
+
+.epd-flow {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.epd-flow::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(168,224,108,0.03), transparent 50%);
+  pointer-events: none;
+}
+
+.epd-flow-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+  position: relative;
+  padding-left: 4px;
+}
+
+.epd-flow-step:last-child { margin-bottom: 0; }
+
+.epd-flow-step::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 32px;
+  bottom: -24px;
+  width: 1px;
+  background: linear-gradient(to bottom, rgba(168,224,108,0.2), transparent);
+}
+
+.epd-flow-step:last-child::before { display: none; }
+
+.flow-num {
+  width: 32px; height: 32px; min-width: 32px;
+  border-radius: 50%;
+  background: var(--accent-dim);
+  border: 1px solid rgba(168,224,108,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: var(--accent);
+}
+
+.flow-text h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.flow-text p { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+
+.epd-flow-result {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.epd-flow-result .result-icon {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(168,224,108,0.12);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.epd-flow-result .result-icon svg {
+  width: 18px; height: 18px; stroke: var(--accent); fill: none; stroke-width: 2;
+}
+
+.epd-flow-result .result-text {
+  font-size: 14px; font-weight: 600; color: var(--accent);
+}
+
 /* ===== FOOTER ===== */
 footer {
   padding: 64px 0 40px;
@@ -1522,25 +1698,22 @@ footer::before {
   <div class="container">
     <div class="section-header fade-up">
       <h2>The core of Product Connect</h2>
-      <p>Three engines. One source of truth for your products.</p>
+      <p>Four pillars. One source of truth for your products.</p>
     </div>
     <div class="features-grid">
       <div class="feature-card fade-up fade-up-delay-1">
         <div class="feature-card-glow"></div>
         <div class="feature-icon">
           <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="10" fill="#a8e06c"/>
-            <circle cx="50" cy="20" r="6" fill="#a8e06c" opacity="0.6"/>
-            <circle cx="70" cy="40" r="6" fill="#a8e06c" opacity="0.6"/>
-            <circle cx="30" cy="40" r="6" fill="#a8e06c" opacity="0.6"/>
-            <line x1="50" y1="50" x2="50" y2="20" stroke="#a8e06c" stroke-width="1.5" opacity="0.4"/>
-            <line x1="50" y1="50" x2="70" y2="40" stroke="#a8e06c" stroke-width="1.5" opacity="0.4"/>
-            <line x1="50" y1="50" x2="30" y2="40" stroke="#a8e06c" stroke-width="1.5" opacity="0.4"/>
-            <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 50 50" to="360 50 50" dur="12s" repeatCount="indefinite"/>
+            <rect x="25" y="30" width="50" height="40" rx="4" fill="#a8e06c" opacity="0.15" stroke="#a8e06c" stroke-width="1.5"/>
+            <path d="M35 45h30M35 55h20" stroke="#a8e06c" stroke-width="1.5" opacity="0.5"/>
+            <circle cx="68" cy="28" r="12" fill="#a8e06c" opacity="0.2" stroke="#a8e06c" stroke-width="1.5"/>
+            <path d="M64 28l4 4 8-8" stroke="#a8e06c" stroke-width="2" fill="none"/>
+            <animate attributeName="opacity" values="0.7;1;0.7" dur="3s" repeatCount="indefinite"/>
           </svg>
         </div>
-        <h3>Semantic Product Graph</h3>
-        <p>A living knowledge base that connects parts, suppliers, materials, and impact data — making every product queryable and every claim verifiable.</p>
+        <h3>Compliance Engine</h3>
+        <p>An ISO-certified calculation engine that aggregates millions of data points, runs standardized impact methodologies, and outputs verified environmental assessments — automating what used to take months and cost tens of thousands.</p>
       </div>
       <div class="feature-card fade-up fade-up-delay-2">
         <div class="feature-card-glow"></div>
@@ -1552,8 +1725,8 @@ footer::before {
             <animate attributeName="opacity" values="0.4;0.7;0.4" dur="3s" repeatCount="indefinite"/>
           </svg>
         </div>
-        <h3>Product Intelligence Engine</h3>
-        <p>Automated regulatory reporting that tracks materials, verifies sourcing, and generates documentation for EU Digital Product Passports and beyond.</p>
+        <h3>Product Intelligence</h3>
+        <p>A purpose-built AI expert in supply chain mapping, product analysis, regulatory specifications, and raw material flows. It verifies sourcing, generates documentation, and produces EU Digital Product Passports — automatically.</p>
       </div>
       <div class="feature-card fade-up fade-up-delay-3">
         <div class="feature-card-glow"></div>
@@ -1568,7 +1741,23 @@ footer::before {
           </svg>
         </div>
         <h3>Connected Products</h3>
-        <p>Turn static objects into intelligent assets with QR-enabled passports that connect owners to makers for parts, repairs, upgrades, and take-back.</p>
+        <p>Turn static objects into intelligent assets. QR-enabled passports connect owners to makers — for spare parts, repairs, upgrades, and end-of-life take-back. Every scan deepens the relationship.</p>
+      </div>
+      <div class="feature-card fade-up fade-up-delay-4">
+        <div class="feature-card-glow"></div>
+        <div class="feature-icon">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="35" width="24" height="30" rx="3" fill="#a8e06c" opacity="0.15" stroke="#a8e06c" stroke-width="1.5"/>
+            <rect x="56" y="35" width="24" height="30" rx="3" fill="#a8e06c" opacity="0.15" stroke="#a8e06c" stroke-width="1.5"/>
+            <path d="M44 45h12M44 55h12" stroke="#a8e06c" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6">
+              <animate attributeName="stroke-dashoffset" values="0;-12" dur="1.5s" repeatCount="indefinite"/>
+            </path>
+            <circle cx="32" cy="50" r="4" fill="#a8e06c" opacity="0.5"/>
+            <circle cx="68" cy="50" r="4" fill="#a8e06c" opacity="0.5"/>
+          </svg>
+        </div>
+        <h3>MCP Access</h3>
+        <p>Connect your company's AI systems directly to Product Connect via Model Context Protocol. Feed product intelligence into your existing workflows, copilots, and internal tools — seamlessly.</p>
       </div>
     </div>
   </div>
@@ -1596,6 +1785,80 @@ footer::before {
         <div class="step-number">3</div>
         <h3>Deploy to the world</h3>
         <p>Generate EU-compliant Digital Product Passports, QR codes, and digital twins that keep products connected from factory floor to end customer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== EPD KILLER FEATURE ===== -->
+<section class="epd-section">
+  <div class="container">
+    <div class="epd-content">
+      <div class="epd-text fade-up">
+        <div class="epd-tag">⚡ Game changer</div>
+        <h2>End-to-end <em>verified EPDs</em>.<br>No consultants required.</h2>
+        <p class="epd-lead">What normally takes 5 months, an LCA specialist, an external verifier, and tens of thousands of euros — Product Connect does automatically. Harvest first-hand data from your real suppliers, run ISO-certified calculations, and output verified Environmental Product Declarations. You stay in control. You gain the knowledge.</p>
+        <div class="epd-stats">
+          <div class="epd-stat">
+            <div class="stat-old">5+ months</div>
+            <div class="stat-new">Days</div>
+            <div class="stat-desc">Time to verified EPD</div>
+          </div>
+          <div class="epd-stat">
+            <div class="stat-old">€10,000–30,000</div>
+            <div class="stat-new">90% less</div>
+            <div class="stat-desc">Cost per product</div>
+          </div>
+          <div class="epd-stat">
+            <div class="stat-old">External consultants</div>
+            <div class="stat-new">Your team</div>
+            <div class="stat-desc">Who owns the knowledge</div>
+          </div>
+          <div class="epd-stat">
+            <div class="stat-old">Generic estimates</div>
+            <div class="stat-new">Real data</div>
+            <div class="stat-desc">From your actual supply chain</div>
+          </div>
+        </div>
+        <a href="product-connect-pricing.html" class="btn-primary"><span>See how it works →</span></a>
+      </div>
+      <div class="epd-visual fade-up fade-up-delay-2">
+        <div class="epd-flow">
+          <div class="epd-flow-step">
+            <div class="flow-num">1</div>
+            <div class="flow-text">
+              <h4>Harvest supplier data</h4>
+              <p>Product Connect reaches into your real supply chain — collecting first-hand material data, certifications, and origin information directly from suppliers.</p>
+            </div>
+          </div>
+          <div class="epd-flow-step">
+            <div class="flow-num">2</div>
+            <div class="flow-text">
+              <h4>Run ISO-certified calculations</h4>
+              <p>Our Compliance Engine aggregates millions of data points and runs PEF/LCA methodologies across your full product graph — automatically.</p>
+            </div>
+          </div>
+          <div class="epd-flow-step">
+            <div class="flow-num">3</div>
+            <div class="flow-text">
+              <h4>Generate verified output</h4>
+              <p>Receive EPD-ready reports that meet ISO 14025 and EN 15804 standards. Third-party verification is built into the workflow.</p>
+            </div>
+          </div>
+          <div class="epd-flow-step">
+            <div class="flow-num">4</div>
+            <div class="flow-text">
+              <h4>Publish to your DPP</h4>
+              <p>Impact data flows directly into your Digital Product Passport — making every environmental claim traceable and verifiable.</p>
+            </div>
+          </div>
+          <div class="epd-flow-result">
+            <div class="result-icon">
+              <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            </div>
+            <div class="result-text">Verified EPD — ready to publish</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
