@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Connect — About</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #050505;
+  --bg-card: #0c0c0c;
+  --border: #1a1a1a;
+  --border-light: #252525;
+  --text: #f0f0f0;
+  --text-secondary: #8a8a8a;
+  --text-dim: #555555;
+  --accent: #a8e06c;
+  --accent-dim: rgba(168, 224, 108, 0.10);
+  --accent-glow: rgba(168, 224, 108, 0.25);
+  --white: #ffffff;
+  --radius: 20px;
+  --radius-sm: 12px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* ===== FADE-UP ===== */
+.fade-up {
+  opacity: 0; transform: translateY(32px);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.fade-up-delay-1 { transition-delay: 0.1s; }
+.fade-up-delay-2 { transition-delay: 0.2s; }
+.fade-up-delay-3 { transition-delay: 0.3s; }
+.fade-up-delay-4 { transition-delay: 0.4s; }
+
+/* ===== NAV ===== */
+nav {
+  position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
+  z-index: 100; padding: 12px 20px;
+  background: rgba(10, 10, 10, 0.65);
+  backdrop-filter: blur(24px) saturate(1.8);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 100px; max-width: 860px; width: calc(100% - 32px);
+}
+nav .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: 14px; letter-spacing: 0.5px; text-transform: uppercase;
+}
+.nav-logo svg { width: 22px; height: 22px; }
+.nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+.nav-links a { font-size: 13px; color: var(--text-secondary); transition: color 0.2s; font-weight: 500; }
+.nav-links a:hover { color: var(--white); }
+.nav-links a.active { color: var(--white); }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 24px; background: var(--white); color: var(--bg);
+  border-radius: 100px; font-size: 13px; font-weight: 600;
+  border: none; cursor: pointer; text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+  position: relative; overflow: hidden;
+}
+.btn-primary::after {
+  content: ''; position: absolute; inset: 0;
+  background: var(--accent); opacity: 0; transition: opacity 0.3s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(168,224,108,0.2); }
+.btn-primary:hover::after { opacity: 1; }
+.btn-primary span { position: relative; z-index: 2; }
+
+@media (max-width: 768px) {
+  nav { border-radius: 16px; }
+  .nav-links { display: none; }
+}
+
+/* ===== HERO ===== */
+.about-hero {
+  padding: 180px 24px 100px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.about-hero::before {
+  content: ''; position: absolute; width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(168,224,108,0.06), transparent 70%);
+  top: -200px; left: 50%; transform: translateX(-50%); pointer-events: none;
+}
+.about-hero .eyebrow {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
+  color: var(--text-dim); margin-bottom: 24px; font-weight: 500;
+}
+.about-hero h1 {
+  font-size: clamp(36px, 6vw, 64px); font-weight: 800;
+  line-height: 1.1; letter-spacing: -0.03em;
+  max-width: 800px; margin: 0 auto 28px;
+}
+.about-hero h1 em {
+  font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400;
+}
+.about-hero .hero-sub {
+  font-size: clamp(16px, 2vw, 20px); color: var(--text-secondary);
+  max-width: 620px; margin: 0 auto; line-height: 1.7;
+}
+
+/* ===== ORIGIN STORY ===== */
+.origin {
+  padding: 80px 0 100px;
+  position: relative;
+}
+.origin-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+  align-items: start;
+}
+@media (max-width: 768px) { .origin-grid { grid-template-columns: 1fr; gap: 40px; } }
+
+.origin-label {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
+  color: var(--accent); margin-bottom: 20px; font-weight: 600;
+}
+.origin-text h2 {
+  font-size: clamp(24px, 3.5vw, 36px); font-weight: 700;
+  line-height: 1.25; letter-spacing: -0.02em; margin-bottom: 24px;
+}
+.origin-text h2 em {
+  font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400;
+}
+.origin-text p {
+  font-size: 16px; color: var(--text-secondary); line-height: 1.8;
+  margin-bottom: 20px;
+}
+.origin-text p:last-child { margin-bottom: 0; }
+
+.origin-visual {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 48px;
+  overflow: hidden;
+}
+.origin-visual::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(168,224,108,0.04), transparent 60%);
+  pointer-events: none;
+}
+.timeline {
+  position: relative; padding-left: 28px;
+  border-left: 1px solid var(--border-light);
+}
+.timeline-item {
+  position: relative; margin-bottom: 36px; padding-left: 0;
+}
+.timeline-item:last-child { margin-bottom: 0; }
+.timeline-item::before {
+  content: ''; position: absolute; left: -34px; top: 4px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--bg); border: 2px solid var(--accent);
+}
+.timeline-item .year {
+  font-size: 12px; font-weight: 700; color: var(--accent);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;
+}
+.timeline-item h4 {
+  font-size: 15px; font-weight: 600; margin-bottom: 4px;
+}
+.timeline-item p {
+  font-size: 13px; color: var(--text-dim); line-height: 1.6;
+}
+
+/* ===== VISION ===== */
+.vision {
+  padding: 100px 0;
+  position: relative;
+}
+.vision::before {
+  content: ''; position: absolute; width: 100%; height: 1px; top: 0;
+  background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
+}
+.vision-header {
+  text-align: center; max-width: 700px; margin: 0 auto 60px;
+}
+.vision-header h2 {
+  font-size: clamp(28px, 4vw, 44px); font-weight: 700;
+  line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 16px;
+}
+.vision-header h2 em {
+  font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400;
+}
+.vision-header p {
+  font-size: 17px; color: var(--text-secondary); line-height: 1.7;
+}
+
+.belief-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+}
+@media (max-width: 768px) { .belief-grid { grid-template-columns: 1fr; } }
+
+.belief-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px 32px;
+  position: relative; overflow: hidden;
+  transition: all 0.3s;
+}
+.belief-card:hover {
+  border-color: var(--border-light);
+  transform: translateY(-3px);
+}
+.belief-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.belief-card:hover::before { opacity: 1; }
+
+.belief-number {
+  font-size: 48px; font-weight: 800; color: rgba(168,224,108,0.08);
+  line-height: 1; margin-bottom: 20px; letter-spacing: -0.04em;
+}
+.belief-card h3 {
+  font-size: 18px; font-weight: 600; margin-bottom: 12px; line-height: 1.3;
+}
+.belief-card p {
+  font-size: 14px; color: var(--text-secondary); line-height: 1.7;
+}
+
+/* ===== STATS / CREDIBILITY ===== */
+.stats {
+  padding: 80px 0;
+  position: relative;
+}
+.stats::before {
+  content: ''; position: absolute; width: 100%; height: 1px; top: 0;
+  background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
+}
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+  text-align: center;
+}
+@media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.stat-item {
+  padding: 40px 20px;
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+}
+.stat-number {
+  font-size: clamp(32px, 4vw, 48px); font-weight: 800;
+  color: var(--accent); line-height: 1; margin-bottom: 8px;
+  letter-spacing: -0.03em;
+}
+.stat-label {
+  font-size: 13px; color: var(--text-secondary); font-weight: 500;
+  line-height: 1.4;
+}
+
+/* ===== EU CONTEXT ===== */
+.eu-context {
+  padding: 100px 0;
+  position: relative;
+}
+.eu-context::before {
+  content: ''; position: absolute; width: 100%; height: 1px; top: 0;
+  background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
+}
+.eu-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+}
+@media (max-width: 768px) { .eu-grid { grid-template-columns: 1fr; gap: 40px; } }
+
+.eu-text h2 {
+  font-size: clamp(24px, 3.5vw, 36px); font-weight: 700;
+  line-height: 1.25; letter-spacing: -0.02em; margin-bottom: 20px;
+}
+.eu-text h2 em {
+  font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400;
+}
+.eu-text p {
+  font-size: 16px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 16px;
+}
+
+.eu-visual {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px;
+  overflow: hidden;
+}
+.eu-visual::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 70% 50%, rgba(168,224,108,0.03), transparent 60%);
+  pointer-events: none;
+}
+.regulation-item {
+  display: flex; align-items: flex-start; gap: 16px;
+  margin-bottom: 24px; position: relative;
+}
+.regulation-item:last-child { margin-bottom: 0; }
+.reg-dot {
+  width: 10px; height: 10px; min-width: 10px; border-radius: 50%;
+  background: var(--accent); margin-top: 6px;
+  box-shadow: 0 0 12px rgba(168,224,108,0.3);
+}
+.regulation-item h4 {
+  font-size: 14px; font-weight: 600; margin-bottom: 2px;
+}
+.regulation-item p {
+  font-size: 13px; color: var(--text-dim); line-height: 1.5;
+}
+
+/* ===== LOGOS / PARTNERS ===== */
+.partners {
+  padding: 60px 0 80px;
+  position: relative;
+}
+.partners::before {
+  content: ''; position: absolute; width: 100%; height: 1px; top: 0;
+  background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
+}
+.partners-label {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
+  color: var(--text-dim); text-align: center; margin-bottom: 40px; font-weight: 500;
+}
+.partner-logos {
+  display: flex; justify-content: center; align-items: center;
+  gap: 60px; flex-wrap: wrap; opacity: 0.4;
+}
+.partner-logos span {
+  font-size: 18px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--text);
+}
+
+/* ===== BUILT IN COPENHAGEN ===== */
+.copenhagen {
+  padding: 100px 0;
+  text-align: center;
+  position: relative;
+}
+.copenhagen::before {
+  content: ''; position: absolute; width: 100%; height: 1px; top: 0;
+  background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
+}
+.copenhagen-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--accent-dim); display: flex; align-items: center;
+  justify-content: center; margin: 0 auto 24px;
+}
+.copenhagen-icon svg { width: 28px; height: 28px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
+.copenhagen h2 {
+  font-size: clamp(24px, 3.5vw, 36px); font-weight: 700;
+  margin-bottom: 16px; letter-spacing: -0.02em;
+}
+.copenhagen h2 em {
+  font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400;
+}
+.copenhagen p {
+  font-size: 16px; color: var(--text-secondary); line-height: 1.8;
+  max-width: 560px; margin: 0 auto;
+}
+
+/* ===== FINAL CTA ===== */
+.final-cta {
+  padding: 100px 0 80px; text-align: center;
+  position: relative;
+}
+.final-cta::before {
+  content: ''; position: absolute; width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(168,224,108,0.06), transparent 70%);
+  top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none;
+}
+.final-cta h2 {
+  font-size: clamp(28px, 5vw, 48px); font-weight: 700;
+  margin-bottom: 16px; letter-spacing: -0.02em; position: relative; z-index: 2;
+}
+.final-cta h2 em {
+  font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400;
+}
+.final-cta p {
+  font-size: 17px; color: var(--text-secondary); line-height: 1.7;
+  max-width: 500px; margin: 0 auto 32px; position: relative; z-index: 2;
+}
+.cta-buttons {
+  display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;
+  position: relative; z-index: 2;
+}
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 24px; background: rgba(255,255,255,0.04); color: var(--text);
+  border-radius: 100px; font-size: 13px; font-weight: 500;
+  border: 1px solid var(--border-light); cursor: pointer;
+  transition: all 0.3s; text-decoration: none;
+}
+.btn-secondary:hover { border-color: var(--text-dim); background: rgba(255,255,255,0.06); }
+
+/* ===== FOOTER ===== */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 60px 0 40px;
+}
+.footer-grid {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
+  margin-bottom: 48px;
+}
+@media (max-width: 768px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; } }
+
+.footer-brand p { font-size: 13px; color: var(--text-dim); margin-top: 12px; line-height: 1.6; }
+.footer-col h4 {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--text-dim); margin-bottom: 16px; font-weight: 600;
+}
+.footer-col a {
+  display: block; font-size: 13px; color: var(--text-secondary);
+  margin-bottom: 10px; transition: color 0.2s;
+}
+.footer-col a:hover { color: var(--white); }
+.footer-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-top: 24px; border-top: 1px solid var(--border);
+  font-size: 12px; color: var(--text-dim);
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+      </svg>
+      Product Connect
+    </a>
+    <ul class="nav-links">
+      <li><a href="#" class="active">About</a></li>
+      <li><a href="product-connect-pricing.html">Pricing</a></li>
+      <li><a href="index.html#platform">Product</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+    <a href="product-connect-pricing.html" class="btn-primary"><span>Get started free</span></a>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="about-hero">
+  <div class="eyebrow fade-up">About Product Connect</div>
+  <h1 class="fade-up fade-up-delay-1">We give physical products<br>a <em>digital voice</em></h1>
+  <p class="hero-sub fade-up fade-up-delay-2">Product Connect is the infrastructure layer for Digital Product Passports — connecting raw materials, supply chains, and end-users in a single source of truth.</p>
+</section>
+
+<!-- ===== ORIGIN STORY ===== -->
+<section class="origin">
+  <div class="container">
+    <div class="origin-grid">
+      <div class="origin-text fade-up">
+        <div class="origin-label">Our story</div>
+        <h2>Born from <em>making things</em></h2>
+        <p>Product Connect grew out of Stykka — a Copenhagen-based design and manufacturing company that builds physical products for some of Europe's most demanding brands.</p>
+        <p>Working daily with BOMs, supplier networks, and material specifications, we saw the gap firsthand: manufacturers have deep knowledge of their products, but no infrastructure to share it — with regulators, customers, or even their own teams.</p>
+        <p>So we built Product Connect. Not as a compliance checkbox, but as a platform that turns product knowledge into a competitive advantage.</p>
+      </div>
+      <div class="origin-visual fade-up fade-up-delay-2">
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="year">2018</div>
+            <h4>Stykka founded</h4>
+            <p>Design-to-production studio, Copenhagen. Custom furniture for brands across Europe.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="year">2022</div>
+            <h4>EU ESPR announced</h4>
+            <p>Digital Product Passports become mandatory for products sold in the EU. We see the opportunity.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="year">2024</div>
+            <h4>Product Connect launched</h4>
+            <p>DPP infrastructure built by manufacturers, for manufacturers. First customers onboarded.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="year">2026</div>
+            <h4>Scaling across the EU</h4>
+            <p>Expanding beyond furniture into all product categories covered by ESPR.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STATS ===== -->
+<section class="stats">
+  <div class="container">
+    <div class="stats-grid fade-up">
+      <div class="stat-item">
+        <div class="stat-number">500+</div>
+        <div class="stat-label">Products hosted</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">12</div>
+        <div class="stat-label">EU countries served</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">∞</div>
+        <div class="stat-label">Scans included — always</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">PEF</div>
+        <div class="stat-label">Aligned impact methodology</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== VISION / BELIEFS ===== -->
+<section class="vision">
+  <div class="container">
+    <div class="vision-header fade-up">
+      <h2>What we <em>believe</em></h2>
+      <p>Every decision we make is shaped by a set of principles about how product data should work.</p>
+    </div>
+
+    <div class="belief-grid">
+      <div class="belief-card fade-up fade-up-delay-1">
+        <div class="belief-number">01</div>
+        <h3>Transparency creates trust</h3>
+        <p>When customers can see where a product comes from, what it's made of, and how it impacts the planet — they don't just buy it. They believe in it. Transparency is the new brand equity.</p>
+      </div>
+      <div class="belief-card fade-up fade-up-delay-2">
+        <div class="belief-number">02</div>
+        <h3>Data should flow, not sit</h3>
+        <p>Product data locked in spreadsheets and ERPs doesn't help anyone. We believe product intelligence should flow from BOM to passport to consumer to recycler — seamlessly.</p>
+      </div>
+      <div class="belief-card fade-up fade-up-delay-3">
+        <div class="belief-number">03</div>
+        <h3>Compliance is a starting line</h3>
+        <p>Meeting ESPR requirements is table stakes. The real opportunity is using your product graph to reduce impact, find better suppliers, open new revenue channels, and build products that last longer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== EU REGULATION CONTEXT ===== -->
+<section class="eu-context">
+  <div class="container">
+    <div class="eu-grid">
+      <div class="eu-text fade-up">
+        <div class="origin-label">The EU context</div>
+        <h2>Built for the <em>regulatory reality</em></h2>
+        <p>The EU Ecodesign for Sustainable Products Regulation (ESPR) mandates Digital Product Passports for products sold in Europe. Furniture is among the first categories, with deadlines approaching fast.</p>
+        <p>Product Connect is built from the ground up for this reality — not bolted onto legacy systems, but designed natively for the DPP framework, PEF methodology, and the way manufacturers actually work.</p>
+      </div>
+      <div class="eu-visual fade-up fade-up-delay-2">
+        <div class="regulation-item">
+          <div class="reg-dot"></div>
+          <div>
+            <h4>ESPR — Ecodesign for Sustainable Products</h4>
+            <p>Framework regulation mandating DPPs across product categories, starting 2026.</p>
+          </div>
+        </div>
+        <div class="regulation-item">
+          <div class="reg-dot"></div>
+          <div>
+            <h4>PEF — Product Environmental Footprint</h4>
+            <p>EU-aligned methodology for measuring and comparing environmental impact.</p>
+          </div>
+        </div>
+        <div class="regulation-item">
+          <div class="reg-dot"></div>
+          <div>
+            <h4>EPD — Environmental Product Declarations</h4>
+            <p>Third-party verified impact reports. Product Connect generates EPD-ready exports.</p>
+          </div>
+        </div>
+        <div class="regulation-item">
+          <div class="reg-dot"></div>
+          <div>
+            <h4>CBAM — Carbon Border Adjustment</h4>
+            <p>Cross-border carbon reporting for imported components and raw materials.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PARTNER LOGOS ===== -->
+<section class="partners">
+  <div class="container">
+    <div class="partners-label fade-up">Trusted by forward-thinking manufacturers</div>
+    <div class="partner-logos fade-up fade-up-delay-1">
+      <span>HAY</span>
+      <span>Fritz Hansen</span>
+      <span>Muuto</span>
+      <span>MENU</span>
+      <span>Normann</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BUILT IN COPENHAGEN ===== -->
+<section class="copenhagen">
+  <div class="container fade-up">
+    <div class="copenhagen-icon">
+      <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    </div>
+    <h2>Built in <em>Copenhagen</em></h2>
+    <p>Product Connect is designed and built in Denmark's capital — at the crossroads of Scandinavian design, European sustainability leadership, and a manufacturing tradition that values craft, longevity, and honesty.</p>
+  </div>
+</section>
+
+<!-- ===== FINAL CTA ===== -->
+<section class="final-cta">
+  <div class="container">
+    <h2 class="fade-up">Ready to give your<br>products a <em>voice</em>?</h2>
+    <p class="fade-up fade-up-delay-1">Start with 3 products free. No credit card, no commitment.</p>
+    <div class="cta-buttons fade-up fade-up-delay-2">
+      <a href="product-connect-pricing.html" class="btn-primary"><span>Get started free →</span></a>
+      <a href="#" class="btn-secondary">Talk to our team</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+          Product Connect
+        </a>
+        <p>Infrastructure for products that last — and manufacturers who lead.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="index.html#platform">Platform</a>
+        <a href="product-connect-pricing.html">Pricing</a>
+        <a href="#">Changelog</a>
+        <a href="#">API Docs</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="#">Careers</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Terms of service</a>
+        <a href="#">Privacy policy</a>
+        <a href="#">Cookie policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Product Connect. All rights reserved.</span>
+      <span>Built in Copenhagen</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Scroll-triggered fade-ins
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
