@@ -684,34 +684,31 @@ h1 em {
 }
 
 @media (max-width: 1024px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .features-grid { grid-template-columns: 1fr; } }
 
 .feature-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 40px 32px;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+}
+
+.feature-card:hover {
+  border-color: rgba(168, 224, 108, 0.15);
+  transform: translateY(-6px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 60px rgba(168,224,108,0.04);
 }
 
 .feature-card::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
+  top: 0; left: 0; right: 0;
+  height: 2px;
   background: linear-gradient(90deg, transparent, rgba(168, 224, 108, 0.3), transparent);
   opacity: 0;
   transition: opacity 0.4s;
-}
-
-.feature-card:hover {
-  border-color: rgba(168, 224, 108, 0.15);
-  background: var(--bg-card-hover);
-  transform: translateY(-4px);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.4);
 }
 
 .feature-card:hover::before { opacity: 1; }
@@ -729,33 +726,84 @@ h1 em {
 
 .feature-card:hover .feature-card-glow { opacity: 1; }
 
-.feature-icon {
-  width: 52px;
-  height: 52px;
+/* Feature card graphic area */
+.feature-graphic {
+  height: 200px;
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(168, 224, 108, 0.06);
-  border: 1px solid rgba(168, 224, 108, 0.1);
-  border-radius: 14px;
-  margin-bottom: 24px;
-  font-size: 22px;
 }
 
-.feature-icon svg { width: 100%; height: 100%; }
+.feature-graphic .deco-dots {
+  position: absolute; width: 100%; height: 100%;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
 
-.feature-card h3 {
-  font-size: 18px;
+.feature-graphic .glow-orb {
+  position: absolute; width: 160px; height: 160px; border-radius: 50%;
+  filter: blur(50px); opacity: 0.2;
+  animation: featureOrbFloat 8s ease-in-out infinite;
+}
+
+@keyframes featureOrbFloat {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(12px, -8px); }
+  66% { transform: translate(-8px, 6px); }
+}
+
+.feature-graphic .deco-ring {
+  position: absolute; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.04);
+  animation: featureRingPulse 6s ease-in-out infinite;
+}
+
+@keyframes featureRingPulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.12); opacity: 0.7; }
+}
+
+.feature-graphic svg.pillar-icon {
+  width: 64px; height: 64px;
+  position: relative; z-index: 2;
+  filter: drop-shadow(0 0 24px currentColor);
+}
+
+.feature-graphic.compliance-bg {
+  background: linear-gradient(135deg, #0a1a0a 0%, #0d2810 50%, #050505 100%);
+}
+.feature-graphic.intelligence-bg {
+  background: linear-gradient(135deg, #050a14 0%, #081828 50%, #050505 100%);
+}
+.feature-graphic.connected-bg {
+  background: linear-gradient(135deg, #0f0818 0%, #150d25 50%, #050505 100%);
+}
+.feature-graphic.mcp-bg {
+  background: linear-gradient(135deg, #050f0d 0%, #041a15 50%, #050505 100%);
+}
+
+/* Feature card body */
+.feature-body {
+  padding: 28px 24px;
+}
+
+.feature-body h3 {
+  font-size: 17px;
   font-weight: 650;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   letter-spacing: -0.01em;
 }
 
-.feature-card p {
-  font-size: 14px;
+.feature-body p {
+  font-size: 13px;
   color: var(--text-secondary);
   line-height: 1.65;
 }
+
+/* Legacy compat */
+.feature-icon { display: none; }
 
 /* ===== HOW IT WORKS ===== */
 .how-it-works {
@@ -1683,11 +1731,11 @@ footer::before {
       <div class="manifesto-text" id="manifestoText">
         <div class="reveal-line" data-accent="true">You can't improve what you can't see.</div>
         <div class="spacer-line"></div>
-        <div class="reveal-line">Product Connect maps the true impact of everything you make — from raw material to component to finished product, and through our Digital Product Passport, all the way to the hands that use it.</div>
+        <div class="reveal-line">We map every material, every supplier, every impact — from raw resource to finished product to the hands that use it.</div>
         <div class="spacer-line"></div>
-        <div class="reveal-line" data-dim="true">When you see the whole chain, you can redesign it. When your customers see it too, they trust you.</div>
+        <div class="reveal-line" data-dim="true">See the whole chain. Redesign it. When your customers see it too — they trust you.</div>
         <div class="spacer-line"></div>
-        <div class="reveal-line" data-dim="true">We're building infrastructure for products that last — and manufacturers who lead.</div>
+        <div class="reveal-line" data-dim="true">Infrastructure for products that last. Manufacturers who lead.</div>
       </div>
     </div>
   </div>
@@ -1701,64 +1749,103 @@ footer::before {
       <p>Four pillars. One source of truth for your products.</p>
     </div>
     <div class="features-grid">
+
+      <!-- COMPLIANCE ENGINE -->
       <div class="feature-card fade-up fade-up-delay-1">
         <div class="feature-card-glow"></div>
-        <div class="feature-icon">
-          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <rect x="25" y="30" width="50" height="40" rx="4" fill="#a8e06c" opacity="0.15" stroke="#a8e06c" stroke-width="1.5"/>
-            <path d="M35 45h30M35 55h20" stroke="#a8e06c" stroke-width="1.5" opacity="0.5"/>
-            <circle cx="68" cy="28" r="12" fill="#a8e06c" opacity="0.2" stroke="#a8e06c" stroke-width="1.5"/>
-            <path d="M64 28l4 4 8-8" stroke="#a8e06c" stroke-width="2" fill="none"/>
-            <animate attributeName="opacity" values="0.7;1;0.7" dur="3s" repeatCount="indefinite"/>
+        <div class="feature-graphic compliance-bg">
+          <div class="deco-dots"></div>
+          <div class="glow-orb" style="background: rgba(168,224,108,0.35); top: 20%; left: 25%;"></div>
+          <div class="deco-ring" style="width: 120px; height: 120px; top: 10%; right: 8%; border-color: rgba(168,224,108,0.06);"></div>
+          <svg class="pillar-icon" viewBox="0 0 64 64" fill="none" style="color: #a8e06c;">
+            <rect x="10" y="18" width="44" height="36" rx="3" stroke="currentColor" stroke-width="1.2" fill="rgba(168,224,108,0.05)"/>
+            <path d="M18 30h28M18 37h20M18 44h24" stroke="currentColor" stroke-width="1.2" opacity="0.4"/>
+            <circle cx="50" cy="16" r="10" stroke="currentColor" stroke-width="1.2" fill="rgba(168,224,108,0.08)"/>
+            <path d="M46 16l3 3 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
-        <h3>Compliance Engine</h3>
-        <p>An ISO-certified calculation engine that aggregates millions of data points, runs standardized impact methodologies, and outputs verified environmental assessments — automating what used to take months and cost tens of thousands.</p>
+        <div class="feature-body">
+          <h3>Compliance Engine</h3>
+          <p>ISO-certified calculations across millions of data points. Standardized impact methodologies in, verified environmental assessments out — automatically.</p>
+        </div>
       </div>
+
+      <!-- PRODUCT INTELLIGENCE -->
       <div class="feature-card fade-up fade-up-delay-2">
         <div class="feature-card-glow"></div>
-        <div class="feature-icon">
-          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <path d="M 50 20 L 60 35 L 75 35 L 63 45 L 68 60 L 50 50 L 32 60 L 37 45 L 25 35 L 40 35 Z" fill="#a8e06c" opacity="0.4"/>
-            <path d="M 50 25 L 57 37 L 70 37 L 60 45 L 65 57 L 50 49 L 35 57 L 40 45 L 30 37 L 43 37 Z" fill="#a8e06c" opacity="0.7"/>
-            <path d="M 50 30 L 55 39 L 66 39 L 57 45 L 62 54 L 50 48 L 38 54 L 43 45 L 34 39 L 45 39 Z" fill="#a8e06c"/>
-            <animate attributeName="opacity" values="0.4;0.7;0.4" dur="3s" repeatCount="indefinite"/>
+        <div class="feature-graphic intelligence-bg">
+          <div class="deco-dots"></div>
+          <div class="glow-orb" style="background: rgba(0,184,255,0.3); bottom: 20%; right: 20%;"></div>
+          <div class="deco-ring" style="width: 100px; height: 100px; bottom: 15%; left: 10%; border-color: rgba(0,184,255,0.06); animation-delay: -2s;"></div>
+          <svg class="pillar-icon" viewBox="0 0 64 64" fill="none" style="color: #00b8ff;">
+            <circle cx="32" cy="28" r="14" stroke="currentColor" stroke-width="1.2" fill="rgba(0,184,255,0.05)"/>
+            <path d="M25 28l4 4 8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+            <path d="M32 42v6M24 52h16" stroke="currentColor" stroke-width="1.2"/>
+            <circle cx="14" cy="22" r="4" stroke="currentColor" stroke-width="0.8" opacity="0.3" fill="rgba(0,184,255,0.05)"/>
+            <circle cx="50" cy="22" r="4" stroke="currentColor" stroke-width="0.8" opacity="0.3" fill="rgba(0,184,255,0.05)"/>
+            <path d="M18 22h4M42 22h4" stroke="currentColor" stroke-width="0.8" opacity="0.2" stroke-dasharray="2 2">
+              <animate attributeName="stroke-dashoffset" values="0;-8" dur="2s" repeatCount="indefinite"/>
+            </path>
           </svg>
         </div>
-        <h3>Product Intelligence</h3>
-        <p>A purpose-built AI expert in supply chain mapping, product analysis, regulatory specifications, and raw material flows. It verifies sourcing, generates documentation, and produces EU Digital Product Passports — automatically.</p>
+        <div class="feature-body">
+          <h3>Product Intelligence</h3>
+          <p>AI-native supply chain mapping, regulatory analysis, material tracking, and verified sourcing. Generates EU Digital Product Passports automatically.</p>
+        </div>
       </div>
+
+      <!-- CONNECTED PRODUCTS -->
       <div class="feature-card fade-up fade-up-delay-3">
         <div class="feature-card-glow"></div>
-        <div class="feature-icon">
-          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="30" cy="50" r="8" fill="#a8e06c"/>
-            <circle cx="70" cy="50" r="8" fill="#a8e06c"/>
-            <line x1="38" y1="50" x2="62" y2="50" stroke="#a8e06c" stroke-width="2"/>
-            <circle cx="50" cy="50" r="3" fill="#a8e06c" opacity="0.6">
-              <animate attributeName="r" values="3;8;3" dur="2s" repeatCount="indefinite"/>
+        <div class="feature-graphic connected-bg">
+          <div class="deco-dots"></div>
+          <div class="glow-orb" style="background: rgba(139,92,246,0.3); top: 25%; right: 25%;"></div>
+          <div class="deco-ring" style="width: 140px; height: 140px; bottom: 5%; left: 5%; border-color: rgba(139,92,246,0.06); animation-delay: -3s;"></div>
+          <svg class="pillar-icon" viewBox="0 0 64 64" fill="none" style="color: #a78bfa;">
+            <rect x="8" y="8" width="20" height="20" rx="4" stroke="currentColor" stroke-width="1.2" fill="rgba(139,92,246,0.05)"/>
+            <rect x="36" y="8" width="20" height="20" rx="4" stroke="currentColor" stroke-width="1.2" fill="rgba(139,92,246,0.05)"/>
+            <rect x="22" y="36" width="20" height="20" rx="4" stroke="currentColor" stroke-width="1.2" fill="rgba(139,92,246,0.05)"/>
+            <path d="M24 28l4 8M40 28l-4 8" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+            <circle cx="18" cy="18" r="3" fill="currentColor" opacity="0.4"/>
+            <circle cx="46" cy="18" r="3" fill="currentColor" opacity="0.4"/>
+            <circle cx="32" cy="46" r="3" fill="currentColor" opacity="0.4"/>
+            <circle cx="32" cy="30" r="2" fill="currentColor" opacity="0.2">
+              <animate attributeName="r" values="2;4;2" dur="2.5s" repeatCount="indefinite"/>
             </circle>
           </svg>
         </div>
-        <h3>Connected Products</h3>
-        <p>Turn static objects into intelligent assets. QR-enabled passports connect owners to makers — for spare parts, repairs, upgrades, and end-of-life take-back. Every scan deepens the relationship.</p>
+        <div class="feature-body">
+          <h3>Connected Products</h3>
+          <p>QR-enabled passports turn objects into intelligent assets. Spare parts, repairs, upgrades, take-back — every scan deepens the relationship.</p>
+        </div>
       </div>
+
+      <!-- MCP ACCESS -->
       <div class="feature-card fade-up fade-up-delay-4">
         <div class="feature-card-glow"></div>
-        <div class="feature-icon">
-          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="35" width="24" height="30" rx="3" fill="#a8e06c" opacity="0.15" stroke="#a8e06c" stroke-width="1.5"/>
-            <rect x="56" y="35" width="24" height="30" rx="3" fill="#a8e06c" opacity="0.15" stroke="#a8e06c" stroke-width="1.5"/>
-            <path d="M44 45h12M44 55h12" stroke="#a8e06c" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6">
+        <div class="feature-graphic mcp-bg">
+          <div class="deco-dots"></div>
+          <div class="glow-orb" style="background: rgba(0,217,159,0.3); top: 30%; left: 20%;"></div>
+          <div class="deco-ring" style="width: 110px; height: 110px; top: 8%; right: 12%; border-color: rgba(0,217,159,0.06); animation-delay: -1.5s;"></div>
+          <svg class="pillar-icon" viewBox="0 0 64 64" fill="none" style="color: #00d99f;">
+            <rect x="6" y="22" width="20" height="20" rx="3" stroke="currentColor" stroke-width="1.2" fill="rgba(0,217,159,0.05)"/>
+            <rect x="38" y="22" width="20" height="20" rx="3" stroke="currentColor" stroke-width="1.2" fill="rgba(0,217,159,0.05)"/>
+            <path d="M26 30h12M26 36h12" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" opacity="0.5">
               <animate attributeName="stroke-dashoffset" values="0;-12" dur="1.5s" repeatCount="indefinite"/>
             </path>
-            <circle cx="32" cy="50" r="4" fill="#a8e06c" opacity="0.5"/>
-            <circle cx="68" cy="50" r="4" fill="#a8e06c" opacity="0.5"/>
+            <circle cx="16" cy="32" r="4" fill="currentColor" opacity="0.3"/>
+            <circle cx="48" cy="32" r="4" fill="currentColor" opacity="0.3"/>
+            <path d="M32 14v6M32 44v6" stroke="currentColor" stroke-width="1" opacity="0.25"/>
+            <circle cx="32" cy="12" r="3" stroke="currentColor" stroke-width="0.8" opacity="0.2"/>
+            <circle cx="32" cy="52" r="3" stroke="currentColor" stroke-width="0.8" opacity="0.2"/>
           </svg>
         </div>
-        <h3>MCP Access</h3>
-        <p>Connect your company's AI systems directly to Product Connect via Model Context Protocol. Feed product intelligence into your existing workflows, copilots, and internal tools — seamlessly.</p>
+        <div class="feature-body">
+          <h3>MCP Access</h3>
+          <p>Connect your AI systems directly via Model Context Protocol. Feed product intelligence into workflows, copilots, and internal tools — seamlessly.</p>
+        </div>
       </div>
+
     </div>
   </div>
 </section>
